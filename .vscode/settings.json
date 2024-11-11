@@ -3,5 +3,7 @@
         "Declaracao_de_classes_e_funcoes_criadas": "cpp",
         "FuncoesPadrao.h": "cpp",
         "math.h": "cpp",
+        "iosfwd": "cpp",
+        "iostream": "cpp"
     }
 }

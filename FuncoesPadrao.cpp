@@ -11,15 +11,19 @@ void Seletor_de_funcionalidade (int selecao) {
             break;
         case 12:
             //Identifica_ciclos();
+            break;
         case 13:
             Analisa_conexoes();             //busca em profundidade 
                                             //é fortemente conexo se, e somente se, cada vertice eh raiz de uma subarvore geradora do mesmo grafo inicial
                                             //realizar o processo de criacao visto em aula para todos os vertices, ja que eh direcionado
                                             //se o grafo nao fosse direcionado precisaria fazer isso uma vez so
+            break;
         case 14:
             //Relacao_presa_predador();     //busca em largura
+            break;
         default:
             cout << ERRO_COMANDO;
+            break;
     }
 }
 
