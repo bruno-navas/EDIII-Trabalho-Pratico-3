@@ -130,7 +130,6 @@ Grafo::Grafo(FILE* arquivo) {
 
             vertices.erase(*it_predador);
             vertices.insert(aux_predador);
-            
         }
         else {
             p.insere_presa(pr);
@@ -207,7 +206,7 @@ Grafo Cria_grafo() {
 
 void Exibe_predadores() {
     Grafo g = Cria_grafo();
-
+    
 
     int numero_de_buscas = 3;
     cin >> numero_de_buscas;
@@ -268,6 +267,9 @@ void Analisa_conexoes() {
         cout << ERRO_PADRAO;
         return;
     }
+
+    cout << g.numero_de_vertices;
+
 
     int componente;
 
