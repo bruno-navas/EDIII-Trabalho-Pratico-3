@@ -257,7 +257,7 @@ void Exibe_predadores() {
         else {
             cout << ERRO_REGISTRO << endl;
         }
-        }
+    }
 }
 
 void Analisa_conexoes() {
@@ -269,7 +269,59 @@ void Analisa_conexoes() {
         return;
     }
 
-    
+    int componente;
 
+    componente=g.Profundidade();
+
+    //se o numero de componentes conexos for igual ao nro de vertices o grafo eh fortemente conexo
+    //assim partindo de qualquer vertice eh possivel chegar em todos os outros vertices do grafo
+    if(componente==g.numero_de_vertices)
+        cout << "Sim, o grafo e fortemente conexo e possui 1 componente";
+    else
+        cout << "Nao, o grafo nao e fortemente conexo e possui " << componente << " componentes";
     
+}
+
+// Recursive function for DFS traversal
+void Grafo::Profundidade_recursao(Predador vertice,int x, bool *visitado){
+    visitado[x]==true;
+
+    for (const auto &y : vertice.presas) // passa pelas presas no predador atual
+    {
+        int i = 0;
+        for (const auto &z : vertices)
+        { // pasa pelos predadores de novo de acordo com os nomes na lista de presas do que veio antes
+
+            if (y.nome_da_presa == z.predador.nome) //se os nomes baterem, ve se ja foi visitado
+            {
+                if (visitado[i] == false)
+                    Profundidade_recursao(z, i, visitado);
+                i++;
+            }
+        }
+    }
+}
+
+// funcao principal da pesquisa em profundidade
+int Grafo::Profundidade(){
+    int componentes=0, aux=0;
+    bool visitado[numero_de_vertices];
+
+    for(int i=0;i<numero_de_vertices;i++)
+        visitado[i]=false;
+
+    // chama a funcao recursiva para cada um dos vertices do grafo
+    for (const auto &x : vertices)
+    {
+        Profundidade_recursao(x,0,visitado);   //inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem da lista
+
+        for(int i=0;i<numero_de_vertices;i++){   //soma os vertices que visitou e reinicia o vetor
+            aux+=visitado[i];
+            visitado[i]=false;
+        }
+        if(aux==numero_de_vertices)             //se o nro de vertices visitados for igual ao nro de vertices eh conexo
+            componentes++;
+    }
+
+    return componentes;
 }

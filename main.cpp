@@ -2,7 +2,7 @@
 #include <fstream>
 using namespace std;
 
-#include "FuncoesPadrao.cpp"
+#include "./FuncoesPadrao.h"
 
 int main() {
     int funcao_selecionada;

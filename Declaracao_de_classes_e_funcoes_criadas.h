@@ -94,6 +94,7 @@ public:
     friend class Grafo;
     friend class Presa;
     void friend Exibe_predadores();
+    void friend Analisa_conexoes();
 };
 
 class Grafo {
@@ -102,6 +103,8 @@ private:
     set<Predador> vertices;
 
 public:
+    int Profundidade();
+    void Profundidade_recursao(Predador vertice, int x, bool *visitado);
     explicit Grafo(FILE* arquivo);
 
     void exibe_grafo() const;
