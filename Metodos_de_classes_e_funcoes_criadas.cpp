@@ -287,17 +287,19 @@ void Grafo::Profundidade_recursao(Predador vertice,int x, vector<vis> &visitado)
     int i;
     visitado[x].visitado=true;
 
-    for (const auto &y : vertice.presas) // passa pelas presas no predador atual
+    for (const auto &y : vertice.presas) // passa pelas presas do predador atual
     {
-        for (const auto &z : vertices)
-        { // pasa pelos predadores de novo de acordo com os nomes na lista de presas do que veio antes
+        for (const auto &z : vertices)  // pasa pelos predadores de novo de acordo com os nomes na lista de presas do que veio antes
+        { 
 
             if (y.nome_da_presa == z.predador.nome) //se os nomes baterem, ve se ja foi visitado
             {
+                if(y.nome_da_presa==vertice.predador.nome)
+                    return;
 
-
-
-                for(i=0;i<numero_de_vertices;)
+                for(i=0;i<numero_de_vertices;i++)           //pega o indice do predador na lista auxiliar
+                    if(visitado[i].nome==z.predador.nome)
+                        break;
 
                 if (visitado[i].visitado == false)
                     Profundidade_recursao(z, i, visitado);
