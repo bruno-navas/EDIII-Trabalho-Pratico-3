@@ -130,7 +130,7 @@ Grafo::Grafo(FILE* arquivo) {
 
             vertices.erase(*it_predador);
             vertices.insert(aux_predador);
-
+            
         }
         else {
             p.insere_presa(pr);
