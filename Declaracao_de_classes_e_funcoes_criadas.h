@@ -4,6 +4,7 @@
 #include <iostream>
 #include <set>
 #include <string.h>
+#include <vector>
 
 using namespace std;
 
@@ -97,20 +98,34 @@ public:
     void friend Analisa_conexoes();
 };
 
+
+    typedef struct{     //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
+    bool visitado;
+    string nome;
+
+    }vis;
+
 class Grafo {
 private:
     int numero_de_vertices;
     set<Predador> vertices;
 
+
 public:
     int Profundidade();
-    void Profundidade_recursao(Predador vertice, int x, bool *visitado);
+    void Profundidade_recursao(Predador vertice, int x,vector<vis> &visitado);
     explicit Grafo(FILE* arquivo);
 
     void exibe_grafo() const;
     void friend Exibe_predadores();
+
     void friend Analisa_conexoes();
+
+
+
 };
+
+
 
 void Cria_grafo_e_exibe();
 Grafo Cria_grafo();

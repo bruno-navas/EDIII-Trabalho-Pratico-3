@@ -131,11 +131,11 @@ Grafo::Grafo(FILE* arquivo) {
             vertices.erase(*it_predador);
             vertices.insert(aux_predador);
 
-            numero_de_vertices++;
         }
         else {
             p.insere_presa(pr);
             vertices.insert(p);
+            numero_de_vertices++;
         }
     }
 
@@ -283,20 +283,25 @@ void Analisa_conexoes() {
 }
 
 // Recursive function for DFS traversal
-void Grafo::Profundidade_recursao(Predador vertice,int x, bool *visitado){
-    visitado[x]==true;
+void Grafo::Profundidade_recursao(Predador vertice,int x, vector<vis> &visitado){
+    int i;
+    visitado[x].visitado=true;
 
     for (const auto &y : vertice.presas) // passa pelas presas no predador atual
     {
-        int i = 0;
         for (const auto &z : vertices)
         { // pasa pelos predadores de novo de acordo com os nomes na lista de presas do que veio antes
 
             if (y.nome_da_presa == z.predador.nome) //se os nomes baterem, ve se ja foi visitado
             {
-                if (visitado[i] == false)
+
+
+
+                for(i=0;i<numero_de_vertices;)
+
+                if (visitado[i].visitado == false)
                     Profundidade_recursao(z, i, visitado);
-                i++;
+                
             }
         }
     }
