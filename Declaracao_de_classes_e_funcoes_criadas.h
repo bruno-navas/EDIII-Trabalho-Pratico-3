@@ -3,11 +3,12 @@
 
 #include <iostream>
 #include <set>
+#include <string.h>
+
 using namespace std;
 
 class Cabecalho{
 private:
-    char status;                // Indicacao da consistencia do arq. de dados, se for 1 esta consistente e se for 0 nao     1 byte
     int topo;                   // Armazena o RRN de um registro logicamente removido ou -1 caso nao haja                   4 bytes
     int nroRegRem;              // Armazena o nro de registros logicamene marcados como removidos, inicia como 0            4 bytes
     int nroPagDisco;            // Armazena o nro de paginas de disco ocupadas pelo arq. de dados                           4 bytes
@@ -15,6 +16,8 @@ private:
 
 public:
     int proxRRN;                // Armazena o valor do prox RRN disponivel, inicia como 0 e muda caso necessario            4 bytes
+    char status;                // Indicacao da consistencia do arq. de dados, se for 1 esta consistente e se for 0 nao     1 byte
+
 
     explicit Cabecalho(FILE* arquivo);
 };
@@ -100,6 +103,7 @@ public:
 
     void exibe_grafo() const;
     void friend Exibe_predadores();
+    void friend Analisa_conexoes();
 };
 
 void Cria_grafo_e_exibe();
