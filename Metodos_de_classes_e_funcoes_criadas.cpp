@@ -1,5 +1,6 @@
 #include "Declaracao_de_classes_e_funcoes_criadas.h"
 #include <cstring>
+#include <utility>
 #include <vector>
 
 #include "FuncoesPadrao.h"
@@ -49,24 +50,23 @@ Especie::Especie(FILE* arquivo) {
     Dado_bin auxiliar(arquivo);
     char *lin = strdup(auxiliar.variavel);
 
+    populacao = auxiliar.populacao;
+
     nome = strsep(&lin, "#");
     especie = strsep(&lin, "#");
     habitat = strsep(&lin, "#");
     dieta = strsep(&lin, "#");
     tipo = strsep(&lin, "#");
+    presa = strsep(&lin, "#");
 
     grau_entrada = 0;
     grau_saida = 1;
     grau = 1;
 }
 
-Presa::Presa(FILE *arquivo) {
-    Dado_bin auxiliar(arquivo);
-    char *lin = strdup(auxiliar.variavel);
-
-    populacao_do_predador = auxiliar.populacao;
-    for(int i=0; i<5; i++){strsep(&lin, "#");}
-    nome_da_presa = strsep(&lin, "#");
+Presa::Presa(int populacao, string nome) {
+    populacao_do_predador = populacao;;
+    nome_da_presa = std::move(nome);
 }
 
 ostream& operator<<(ostream &os, const Presa &presa) {
@@ -104,16 +104,16 @@ Grafo::Grafo(FILE* arquivo) {
 
     numero_de_vertices = 0;
 
+    fseek(arquivo, 1600, SEEK_SET);
+
     for (int i = 0; i < cabecalho.proxRRN; i++) {
-        // Calcula a posição do predador e da presa no arquivo binário
-        fseek(arquivo, 1600 + (160 * i), SEEK_SET);
 
         // Lê o predador do arquivo binário
         Predador p(arquivo);
 
         // Lê a presa do arquivo binário
-        fseek(arquivo, 1600 + (160 * i), SEEK_SET); // Reposiciona para ler a presa
-        Presa pr(arquivo);
+        //fseek(arquivo, 1600 + (160 * i), SEEK_SET); // Reposiciona para ler a presa
+        Presa pr(p.predador.populacao, p.predador.presa);
 
         if(pr.populacao_do_predador==-1) {
             continue;
@@ -131,7 +131,6 @@ Grafo::Grafo(FILE* arquivo) {
             vertices.erase(*it_predador);
             vertices.insert(aux_predador);
 
-
             numero_de_vertices++;
         }
         else {
@@ -140,27 +139,22 @@ Grafo::Grafo(FILE* arquivo) {
         }
     }
 
+    fseek(arquivo, 1600, SEEK_SET);
+
     for (int i=0; i < cabecalho.proxRRN; i++) {
-        // Calcula a posição do predador e da presa no arquivo binário
-        fseek(arquivo, 1600 + (160 * i), SEEK_SET);
 
         // Lê o predador do arquivo binário
         Predador p(arquivo);
 
         // Lê a presa do arquivo binário
-        fseek(arquivo, 1600 + (160 * i), SEEK_SET); // Reposiciona para ler a presa
-        Presa pr(arquivo);
+        Presa pr(p.predador.populacao, p.predador.presa);
 
         if(pr.populacao_do_predador==-1) {
             continue;
         }
 
         Predador busca_presa = p;
-        busca_presa.predador.nome = pr.nome_da_presa;
-
-        //cout << busca_presa << endl;
-        //cout << pr << endl;
-        //system("pause");
+        busca_presa.predador.nome = busca_presa.predador.presa;
 
         auto it_presa = vertices.find(busca_presa);
 
