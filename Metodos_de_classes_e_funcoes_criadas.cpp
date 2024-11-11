@@ -144,10 +144,6 @@ Grafo::Grafo(FILE* arquivo) {
         Predador busca_presa = p;
         busca_presa.predador.nome = busca_presa.predador.presa;
 
-        //cout << busca_presa << endl;
-        //cout << pr << endl;
-        //system("pause");
-
         auto it_presa = vertices.find(busca_presa);
 
         if(it_presa!=vertices.end()) {
