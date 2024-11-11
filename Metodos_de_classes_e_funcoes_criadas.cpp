@@ -309,20 +309,28 @@ void Grafo::Profundidade_recursao(Predador vertice,int x, vector<vis> &visitado)
 
 // funcao principal da pesquisa em profundidade
 int Grafo::Profundidade(){
-    int componentes=0, aux=0;
-    bool visitado[numero_de_vertices];
+    int componentes=0, aux=0,k;
+    vector<vis> visitado;
+    vis temp;
 
-    for(int i=0;i<numero_de_vertices;i++)
-        visitado[i]=false;
+
+    temp.visitado=false; 
+    for (const auto &x : vertices){
+        temp.nome=x.predador.nome;
+        visitado.push_back(temp);
+    }
 
     // chama a funcao recursiva para cada um dos vertices do grafo
+    k=-1;
     for (const auto &x : vertices)
     {
-        Profundidade_recursao(x,0,visitado);   //inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem da lista
+        k++;
+
+        Profundidade_recursao(x,k,visitado);   //inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem da lista
 
         for(int i=0;i<numero_de_vertices;i++){   //soma os vertices que visitou e reinicia o vetor
-            aux+=visitado[i];
-            visitado[i]=false;
+            aux+=visitado[i].visitado;
+            visitado[i].visitado=false;
         }
         if(aux==numero_de_vertices)             //se o nro de vertices visitados for igual ao nro de vertices eh conexo
             componentes++;
