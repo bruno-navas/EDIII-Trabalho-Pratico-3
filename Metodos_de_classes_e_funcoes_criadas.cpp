@@ -88,7 +88,19 @@ ostream& operator<<(ostream& out, const Predador& predador) {
 }
 
 Grafo::Grafo(FILE* arquivo) {
+
+    if(arquivo==NULL){              //se o arquivo nao existir
+        numero_de_vertices=-1;
+        return;
+    }
+
     Cabecalho cabecalho(arquivo);
+
+    if(cabecalho.status=='0'){      //se  arquivo estiver inconsistente
+        numero_de_vertices=-1;
+        return;
+    }
+
 
     numero_de_vertices = 0;
 
@@ -158,6 +170,13 @@ Grafo::Grafo(FILE* arquivo) {
 }
 
 void Grafo::exibe_grafo() const {
+
+    if(numero_de_vertices==-1)
+    {
+        cout << ERRO_PADRAO;
+        return;
+    }
+
     for (const auto& x: vertices) {
         for (const auto& y: x.presas) {
             cout << x << y;
@@ -168,10 +187,11 @@ void Grafo::exibe_grafo() const {
 void Cria_grafo_e_exibe() {
     string nome;
     cin >> nome;
-
+    
     FILE *arq_bin = fopen(nome.c_str(), "rb");
 
     Grafo g(arq_bin);
+
 
     g.exibe_grafo();
 }
@@ -188,8 +208,15 @@ Grafo Cria_grafo() {
 void Exibe_predadores() {
     Grafo g = Cria_grafo();
 
+
     int numero_de_buscas = 3;
     cin >> numero_de_buscas;
+
+    if(g.numero_de_vertices=-1) //se houver problema na criacao do grafo
+    {
+        cout << ERRO_PADRAO;
+        return;
+    }
 
     fflush(stdin);
 
@@ -231,4 +258,18 @@ void Exibe_predadores() {
             cout << ERRO_REGISTRO << endl;
         }
         }
+}
+
+void Analisa_conexoes() {
+    Grafo g = Cria_grafo();
+
+    if(g.numero_de_vertices=-1) //se houver problema na criacao do grafo
+    {
+        cout << ERRO_PADRAO;
+        return;
+    }
+
+    
+
+    
 }
