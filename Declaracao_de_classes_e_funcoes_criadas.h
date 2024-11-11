@@ -48,8 +48,6 @@ public:
     string habitat;
     string dieta;
     string tipo;
-    string presa;
-    int populacao;
     int grau_entrada;
     int grau_saida;
     int grau;
@@ -64,7 +62,7 @@ public:
     string nome_da_presa;
     int populacao_do_predador;
 
-    explicit Presa(int populacao, string nome);
+    explicit Presa(FILE* arquivo);
     bool operator<(const Presa& e) const {
         return this->nome_da_presa < e.nome_da_presa;
     }
@@ -92,7 +90,6 @@ public:
 
     friend ostream& operator<<(ostream& out, const Predador& predador);
     friend class Grafo;
-    friend class Presa;
     void friend Exibe_predadores();
 };
 
