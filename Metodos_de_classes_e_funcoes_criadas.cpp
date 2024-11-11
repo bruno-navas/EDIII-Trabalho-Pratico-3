@@ -211,7 +211,7 @@ void Exibe_predadores() {
     int numero_de_buscas = 3;
     cin >> numero_de_buscas;
 
-    if(g.numero_de_vertices=-1) //se houver problema na criacao do grafo
+    if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
     {
         cout << ERRO_PADRAO;
         return;
@@ -262,13 +262,11 @@ void Exibe_predadores() {
 void Analisa_conexoes() {
     Grafo g = Cria_grafo();
 
-    if(g.numero_de_vertices=-1) //se houver problema na criacao do grafo
+    if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
     {
         cout << ERRO_PADRAO;
         return;
     }
-
-    cout << g.numero_de_vertices;
 
 
     int componente;
