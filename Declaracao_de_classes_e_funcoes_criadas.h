@@ -99,36 +99,45 @@ public:
 };
 
 
+
+
+class Grafo {
+private:
+    int numero_de_vertices;
+    set<Predador> vertices;
+    
     typedef struct{     //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
     bool visitado;
     string nome;
 
     }vis;
 
-class Grafo {
-private:
-    int numero_de_vertices;
-    set<Predador> vertices;
+    //METODO DE EXIBICAO DA FUNCIONALIDADE 10
+    void exibe_grafo() const;
 
-
-public:
-    int Profundidade();
-    void Profundidade_recursao(Predador vertice, int x,vector<vis> &visitado);
     explicit Grafo(FILE* arquivo);
 
-    void exibe_grafo() const;
-    void friend Exibe_predadores();
+    //METODOS DA FUNCIONALIDADE 13
+    int Profundidade();
+    void Profundidade_recursao(Predador vertice, int x,vector<vis> &visitado);
+    
 
-    void friend Analisa_conexoes();
+public:
+    Grafo friend Cria_grafo();
 
+    void friend Cria_grafo_e_exibe();           //funcionalidade 10
+    void friend Exibe_predadores();             //funcionalidade 11
+    //void friend Identifica_ciclos();            //funcionalidade 12 
+    void friend Analisa_conexoes();             //funcionalidade 13
+    //void friend Relacao_presa_predador();       //funcionalidade 14
 
 
 };
 
-
-
-void Cria_grafo_e_exibe();
 Grafo Cria_grafo();
+
+//funcionalidades em ordem
+void Cria_grafo_e_exibe();  
 void Exibe_predadores();
 void Identifica_ciclos();
 void Analisa_conexoes();

@@ -86,7 +86,7 @@ ostream& operator<<(ostream& out, const Predador& predador) {
 
     return out;
 }
-
+//CONSTRUTOR DO GRAFO DADO UM PONTEIRO PRA ARQUIVO
 Grafo::Grafo(FILE* arquivo) {
 
     if(arquivo==NULL){              //se o arquivo nao existir
@@ -168,6 +168,24 @@ Grafo::Grafo(FILE* arquivo) {
     }
 }
 
+
+
+void Cria_grafo_e_exibe() {
+
+    Grafo g = Cria_grafo();
+
+    g.exibe_grafo();
+}
+
+Grafo Cria_grafo() {
+    string nome;
+    cin >> nome;
+
+    FILE *arq_bin = fopen(nome.c_str(), "rb");
+
+    return Grafo (arq_bin);
+}
+
 void Grafo::exibe_grafo() const {
 
     if(numero_de_vertices==-1)
@@ -181,27 +199,6 @@ void Grafo::exibe_grafo() const {
             cout << x << y;
         }
     }
-}
-
-void Cria_grafo_e_exibe() {
-    string nome;
-    cin >> nome;
-    
-    FILE *arq_bin = fopen(nome.c_str(), "rb");
-
-    Grafo g(arq_bin);
-
-
-    g.exibe_grafo();
-}
-
-Grafo Cria_grafo() {
-    string nome;
-    cin >> nome;
-
-    FILE *arq_bin = fopen(nome.c_str(), "rb");
-
-    return Grafo (arq_bin);
 }
 
 void Exibe_predadores() {
@@ -360,13 +357,14 @@ void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado
             {
                 if (presas_vertice.nome_da_presa == vertice.predador.nome) // se a presa preda ela mesma da retorno, bicho burro
                     return;
+                
 
-                for (i = 0; i < numero_de_vertices; i++)                    // pega o indice do predador/presa na lista auxiliar
-                    if (visitado[i].nome == lista_predador.predador.nome)   // nao eh tao eficiente mas foi a forma pensada para indexar o <set>
+                for (i = 0; i < numero_de_vertices; i++)                  // pega o indice do predador/presa na lista auxiliar
+                    if (visitado[i].nome == lista_predador.predador.nome) // nao eh tao eficiente mas foi a forma pensada para indexar o <set>
                         break;
 
-                if (visitado[i].visitado == false) // se esse vertice ainda nao foi visitado, chamada recursiva
-                    Profundidade_recursao(lista_predador, i, visitado); //funcao recebe o vertice que ainda nao foi visitado, a lista auxiliar e o indice referente
+                if (visitado[i].visitado == false)                      // se esse vertice ainda nao foi visitado, chamada recursiva
+                    Profundidade_recursao(lista_predador, i, visitado); // funcao recebe o vertice que ainda nao foi visitado, a lista auxiliar e o indice referente
             }
         }
     }

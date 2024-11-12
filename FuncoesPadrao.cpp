@@ -14,8 +14,8 @@ void Seletor_de_funcionalidade (int selecao) {
             break;
         case 13:
             Analisa_conexoes();             //busca em profundidade 
-                                            //é fortemente conexo se, e somente se, cada vertice eh raiz de uma subarvore geradora do mesmo grafo inicial
-                                            //realizar o processo de criacao visto em aula para todos os vertices, ja que eh direcionado
+                                            //eh fortemente conexo se, e somente se, cada vertice eh raiz de uma subarvore geradora do mesmo grafo inicial
+                                            //realizar o processo de busca visto em aula para todos os vertices, ja que eh direcionado
                                             //se o grafo nao fosse direcionado precisaria fazer isso uma vez so
             break;
         case 14:
