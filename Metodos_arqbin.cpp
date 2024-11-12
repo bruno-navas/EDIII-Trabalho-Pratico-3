@@ -19,3 +19,21 @@ Dado_bin::Dado_bin(FILE *arquivo) {
     fread(&variavel, 1, 142, arquivo);                     // Lê 142 bytes para 'variavel'
 
 }
+
+Especie::Especie(FILE* arquivo) {
+    Dado_bin auxiliar(arquivo);
+    char *lin = strdup(auxiliar.variavel);
+
+    populacao = auxiliar.populacao;
+
+    nome = strsep(&lin, "#");
+    especie = strsep(&lin, "#");
+    habitat = strsep(&lin, "#");
+    dieta = strsep(&lin, "#");
+    tipo = strsep(&lin, "#");
+    presa = strsep(&lin, "#");
+
+    grau_entrada = 0;
+    grau_saida = 1;
+    grau = 1;
+}

@@ -2,7 +2,7 @@
 using namespace std;
 #include "Funcionalidades.h"
 #include "FuncoesAuxiliares.h"
-
+#include "Classes_metodos_grafo.h"
 
 void Exibe_predadores() {
     Grafo g = Cria_grafo();

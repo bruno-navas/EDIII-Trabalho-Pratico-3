@@ -8,24 +8,6 @@
 
 using namespace std;
 
-Especie::Especie(FILE* arquivo) {
-    Dado_bin auxiliar(arquivo);
-    char *lin = strdup(auxiliar.variavel);
-
-    populacao = auxiliar.populacao;
-
-    nome = strsep(&lin, "#");
-    especie = strsep(&lin, "#");
-    habitat = strsep(&lin, "#");
-    dieta = strsep(&lin, "#");
-    tipo = strsep(&lin, "#");
-    presa = strsep(&lin, "#");
-
-    grau_entrada = 0;
-    grau_saida = 1;
-    grau = 1;
-}
-
 Presa::Presa(int populacao, string nome) {
     populacao_do_predador = populacao;;
     nome_da_presa = std::move(nome);
