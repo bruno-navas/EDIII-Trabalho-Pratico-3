@@ -112,6 +112,12 @@ private:
 
     }vis;
 
+    typedef struct{     //variavel auxiliar para fazer a pesquisa com o algoritmo de dijkstra, armazena o nome da especie e o peso do caminho
+    int peso;
+    string nome;
+
+    }dij;
+
     //METODO DE EXIBICAO DA FUNCIONALIDADE 10
     void exibe_grafo() const;
 
@@ -121,7 +127,7 @@ private:
     void Profundidade_recursao(Predador vertice, int x,vector<vis> &visitado);
 
     //METODO DA FUNCIONALIDADE 14
-    int dijkstra(char n_predador[61],char n_presa[61]);
+    int dijkstra(char n_predador[91],char n_presa[91]);
 public:
     explicit Grafo(FILE* arquivo);
     Grafo friend Cria_grafo();

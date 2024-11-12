@@ -354,6 +354,10 @@ void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado
 
 //FUNCIONALIDADE 14 - DIJKSTRA
 
+//a funcao realiza um loop de pesquisas que recebe
+//um vertice de inicio e um alimento alvo e determina o peso
+// minimo do caminho que parte do inicio e vai ate o alvo
+//isso eh feito com o algoritmo de dijkstra, que segue abaixo
 
 void Relacao_presa_predador(){
 
@@ -367,8 +371,8 @@ void Relacao_presa_predador(){
 
     int pesquisas;          //nro de pesquisas que serao feitas
     int peso_caminho;       //variavel de retorno da pesquisa, indica o peso do caminho
-    char n_presa[61];       //presa da pesquisa
-    char n_predador[61];    //predador da pesquisa
+    char n_presa[91];       //presa da pesquisa
+    char n_predador[91];    //predador da pesquisa
 
     cin >> pesquisas;   //quantas pesquisas serao feitas
 
@@ -391,16 +395,36 @@ void Relacao_presa_predador(){
     }
 }
 
-int Grafo::dijkstra(char n_predador[61],char n_presa[61])
+//o algoritmo recebe o vertice inicial e o alvo, o algoritmo guloso
+//funciona da maneira determinada nos slides da AULA17
+
+//caso nao exista um caminho entre o vertice inicial e o alvo o peso
+//no vetor D vale -1
+
+int Grafo::dijkstra(char n_predador[91],char n_presa[91])
 {
     int peso=0;
+    vector<dij> D;  //vetor D que armazena os pesos para chegar ate cada vertice partindo de um vertice de predador
+    dij temp;             // vetor auxiliar
+    //inicializa o vetor auxiliar D
+
+    // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como -1
+    // e tambem eh destacado o nome da especie, se nao houver caminho que chegue a algum vertice
+    temp.peso = -1;
+    for (const auto &x : vertices)
+    {
+        temp.nome = x.predador.nome;
+        D.push_back(temp);
+    }
+    
+        
 
 
 
-
-    if(peso==0)
-        peso=-1;
-    return peso;
+    //retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
+    for (int i = 0; i < numero_de_vertices; i++) 
+        if (D[i].nome == n_presa)
+            return D[i].peso;
 }
 
 
