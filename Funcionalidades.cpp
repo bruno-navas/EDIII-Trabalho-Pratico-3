@@ -4,6 +4,16 @@ using namespace std;
 #include "FuncoesAuxiliares.h"
 #include "Classes_metodos_grafo.h"
 
+
+void Cria_grafo_e_exibe() { 
+
+    Grafo g = Cria_grafo();
+
+    g.exibe_grafo();
+}
+
+
+
 void Exibe_predadores() {
     Grafo g = Cria_grafo();
 

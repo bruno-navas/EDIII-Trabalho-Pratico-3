@@ -30,7 +30,7 @@ ostream& operator<<(ostream& out, const Predador& predador) {
 
     return out;
 }
-//CONSTRUTOR DO GRAFO DADO UM PONTEIRO PRA ARQUIVO
+//CONSTRUTOR DO GRAFO DADO UM PONTEIRO PRA ARQUIVO, se tiver problema no inicio retorna o grafo com V=-1 para encerrar o programa
 Grafo::Grafo(FILE* arquivo) {
 
     if(arquivo==NULL){              //se o arquivo nao existir
@@ -44,7 +44,6 @@ Grafo::Grafo(FILE* arquivo) {
         numero_de_vertices=-1;
         return;
     }
-
 
     numero_de_vertices = 0;
 
@@ -111,15 +110,9 @@ Grafo::Grafo(FILE* arquivo) {
         }
     }
 }
+//METODOS USADOS NA FUNCAO 10///////////////////////////////////////////////////////////////////////
 
-
-void Cria_grafo_e_exibe() {
-
-    Grafo g = Cria_grafo();
-
-    g.exibe_grafo();
-}
-
+//metodo que chama o construtor do grafo com um ponteiro de arquivo binario inicializado de acordo com o nome dado
 Grafo Cria_grafo() {
     string nome;
     cin >> nome;
@@ -129,7 +122,6 @@ Grafo Cria_grafo() {
     return Grafo (arq_bin);
 }
 
-//METODO USADO NA FUNCAO 11///////////////////////////////////////////////////////////////////////
 
 void Grafo::exibe_grafo() const {
 
@@ -146,6 +138,9 @@ void Grafo::exibe_grafo() const {
     }
 }
 
+//A FUNCIONALIDADE 11 NAO USA NENHUM METODO DA CLASSE DO GRAFO, APENAS OS DADOS DELE////////////
+
+//METODOS USADOS NA FUNCIONALIDADE 12/////////////////////////////////////////////////////////////
 
 
 //METODOS USADOS NA FUNCIONALIDADE 13///////////////////////////////////////////////////////////
