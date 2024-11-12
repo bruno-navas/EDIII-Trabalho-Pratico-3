@@ -1,9 +1,7 @@
 #include "FuncoesAuxiliares.h"
-#include "Funcionalidades.h"
+#include "Classes_metodos_grafo.h"
 #include <iostream>
 #include <string.h>
-
-using namespace std;
 
 void Seletor_de_funcionalidade (int selecao) {
     switch (selecao) {
@@ -27,7 +25,7 @@ void Seletor_de_funcionalidade (int selecao) {
                                             //algoritmo que procura o menor caminho entre duas especies considerando o peso
             break;
         default:
-            cout << ERRO_COMANDO;
+            std::cout << ERRO_COMANDO;
             break;
     }
 }

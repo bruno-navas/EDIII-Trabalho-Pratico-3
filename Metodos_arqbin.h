@@ -1,10 +1,9 @@
 #ifndef METODOS_ARQBIN_H
 #define METODOS_ARQBIN_H
 
-using namespace std;
 #include <iostream>
 #include <string.h>
-#include <vector>
+#include <string>
 
 class Cabecalho{
 private:
@@ -42,12 +41,12 @@ public:
 
 class Especie{
 public:
-    string nome;
-    string especie;
-    string habitat;
-    string dieta;
-    string tipo;
-    string presa;
+    std::string nome;
+    std::string especie;
+    std::string habitat;
+    std::string dieta;
+    std::string tipo;
+    std::string presa;
     int populacao;
     int grau_entrada;
     int grau_saida;

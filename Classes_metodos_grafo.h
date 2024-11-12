@@ -7,9 +7,6 @@
 #include <vector>
 
 #include "Metodos_arqbin.h"     //manipulacoes no arquivo binario
-#include "Funcionalidades.h"    //funcionalidades do programa
-
-using namespace std;
 
 class Presa{
 public:
@@ -24,11 +21,10 @@ public:
 };
 
 class Predador {
-private:
-    Especie predador;
-    set<Presa> presas;
 
 public:
+    Especie predador;
+    set<Presa> presas;
     explicit Predador(FILE* arquivo);
     void insere_presa(const Presa& p);
 
@@ -45,6 +41,7 @@ public:
     friend ostream& operator<<(ostream& out, const Predador& predador);
     friend class Grafo;
     friend class Presa;
+
     void friend Exibe_predadores();
     void friend Analisa_conexoes();
 };
@@ -85,11 +82,24 @@ public:
     //void friend Identifica_ciclos();            //funcionalidade 12 
     void friend Analisa_conexoes();             //funcionalidade 13
     void friend Relacao_presa_predador();       //funcionalidade 14
+    typedef struct{     //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
+    bool visitado;
+    string nome;
 
+    }vis;
 
 };
 //funcao que le o nome do arquivo, cria o ponteiro pra arquivo e chama o construtor
 Grafo Cria_grafo();
+void Cria_grafo_e_exibe();
+
+void Exibe_predadores();
+
+void Identifica_ciclos();
+
+void Analisa_conexoes();
+
+void Relacao_presa_predador();
 
 
-#endif //DECLARACAO_CLASSES_GRAFO_H
+#endif //CLASSES_METODOS_GRAFO_H
