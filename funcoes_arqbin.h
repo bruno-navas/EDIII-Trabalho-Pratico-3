@@ -1,5 +1,5 @@
-#ifndef METODOS_ARQBIN_H
-#define METODOS_ARQBIN_H
+#ifndef FUNCOES_ARQBIN_H
+#define FUNCOES_ARQBIN_H
 
 using namespace std;
 #include <iostream>
