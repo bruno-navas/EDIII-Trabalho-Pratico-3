@@ -402,7 +402,8 @@ void Relacao_presa_predador(){
 //no vetor D vale -1
 
 int Grafo::dijkstra(char n_predador[91],char n_presa[91])
-{
+{   
+    int i;
     int peso=0;
     vector<dij> D;  //vetor D que armazena os pesos para chegar ate cada vertice partindo de um vertice de predador
     dij temp;             // vetor auxiliar
@@ -416,15 +417,16 @@ int Grafo::dijkstra(char n_predador[91],char n_presa[91])
         temp.nome = x.predador.nome;
         D.push_back(temp);
     }
-    
-        
+
+
 
 
 
     //retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
-    for (int i = 0; i < numero_de_vertices; i++) 
+    for (i = 0; i < numero_de_vertices; i++) 
         if (D[i].nome == n_presa)
-            return D[i].peso;
+            break;
+    return D[i].peso;
 }
 
 
