@@ -297,6 +297,9 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
 
     // retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
     for (i = 0; i < numero_de_vertices; i++)
+        cout << D[i].nome << " " << D[i].peso << "\n";
+    
+    for (i = 0; i < numero_de_vertices; i++)
         if (D[i].nome == n_presa)
             break;
     return D[i].peso;
