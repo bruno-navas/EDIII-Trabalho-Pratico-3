@@ -115,25 +115,26 @@ private:
     //METODO DE EXIBICAO DA FUNCIONALIDADE 10
     void exibe_grafo() const;
 
-    explicit Grafo(FILE* arquivo);
 
     //METODOS DA FUNCIONALIDADE 13
     int Profundidade();
     void Profundidade_recursao(Predador vertice, int x,vector<vis> &visitado);
-    
 
+    //METODO DA FUNCIONALIDADE 14
+    int dijkstra(char n_predador[61],char n_presa[61]);
 public:
+    explicit Grafo(FILE* arquivo);
     Grafo friend Cria_grafo();
 
     void friend Cria_grafo_e_exibe();           //funcionalidade 10
     void friend Exibe_predadores();             //funcionalidade 11
     //void friend Identifica_ciclos();            //funcionalidade 12 
     void friend Analisa_conexoes();             //funcionalidade 13
-    //void friend Relacao_presa_predador();       //funcionalidade 14
+    void friend Relacao_presa_predador();       //funcionalidade 14
 
 
 };
-
+//funcao que le o nome do arquivo, cria o ponteiro pra arquivo e chama o construtor
 Grafo Cria_grafo();
 
 //funcionalidades em ordem
@@ -142,5 +143,8 @@ void Exibe_predadores();
 void Identifica_ciclos();
 void Analisa_conexoes();
 void Relacao_presa_predador();
+
+void scan_quote_string(char *str);
+char* strsep(char** stringp, const char* delim);
 
 #endif //DECLARACAO_DE_CLASSES_E_FUNCOES_CRIADAS_H

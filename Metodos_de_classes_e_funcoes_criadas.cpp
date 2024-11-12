@@ -27,24 +27,7 @@ Dado_bin::Dado_bin(FILE *arquivo) {
     //cout << variavel << endl;
 }
 
-char* strsep(char** stringp, const char* delim)
-{
-    char* start = *stringp;
 
-    char *p = (start != nullptr) ? strpbrk(start, delim) : nullptr;
-
-    if (p == nullptr)
-    {
-        *stringp = nullptr;
-    }
-    else
-    {
-        *p = '\0';
-        *stringp = p + 1;
-    }
-
-    return start;
-}
 
 Especie::Especie(FILE* arquivo) {
     Dado_bin auxiliar(arquivo);
@@ -203,16 +186,15 @@ void Grafo::exibe_grafo() const {
 
 void Exibe_predadores() {
     Grafo g = Cria_grafo();
-    
-
-    int numero_de_buscas = 3;
-    cin >> numero_de_buscas;
 
     if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
     {
         cout << ERRO_PADRAO;
         return;
     }
+
+    int numero_de_buscas = 3;
+    cin >> numero_de_buscas;
 
     fflush(stdin);
 
@@ -369,3 +351,53 @@ void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado
         }
     }
 }
+
+//FUNCIONALIDADE 14 - DIJKSTRA
+
+
+void Relacao_presa_predador(){
+
+    Grafo g = Cria_grafo();      //cria o grafo
+
+    if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo, da erro e nao executa a funcao
+    {
+        cout << ERRO_PADRAO;
+        return;
+    }
+
+    int pesquisas;          //nro de pesquisas que serao feitas
+    int peso_caminho;       //variavel de retorno da pesquisa, indica o peso do caminho
+    char n_presa[61];       //presa da pesquisa
+    char n_predador[61];    //predador da pesquisa
+
+    cin >> pesquisas;   //quantas pesquisas serao feitas
+
+    for(int i=0;i<pesquisas;i++)    //loop das pesquisas
+    {   
+        scan_quote_string(n_predador);  //le o primeiro e ultimo vertice da pesquisa
+        scan_quote_string(n_presa);
+
+
+        peso_caminho=dijkstra(n_predador,n_presa);  //chama a funcao do algoritmo de dijkstra para busca em largura
+                                                    //funcao acha o menor caminho entre dois vertices
+                                                    //funcao retorna -1 se nao houver caminho entre os dois
+
+        //ao fim da pesquisa atual checa se teve ou nao caminho e exibe o resultado
+        if(peso_caminho==-1)    
+            cout << "CAMINHO INEXISTENTE";
+        else 
+            cout << peso_caminho;
+        cout << "\n";
+    }
+}
+
+int Grafo::dijkstra(char n_predador[61],char n_presa[61])
+{
+    int peso;
+
+    return peso;
+}
+
+
+
+
