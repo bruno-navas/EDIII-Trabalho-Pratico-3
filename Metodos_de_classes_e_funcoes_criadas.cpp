@@ -393,7 +393,7 @@ void Relacao_presa_predador(){
 
 int Grafo::dijkstra(char n_predador[61],char n_presa[61])
 {
-    int peso;
+    int peso=-1;
 
     return peso;
 }
