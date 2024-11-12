@@ -329,7 +329,7 @@ int Grafo::Profundidade(){
         k++;
         aux=0;
         Profundidade_recursao(x,k,visitado);   //inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem da lista
-
+        cout << "Partindo de: " << x.predador.nome << "\n";
         for(int i=0;i<numero_de_vertices;i++){   //soma os vertices que visitou e reinicia o vetor
             cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
             aux+=visitado[i].visitado;
