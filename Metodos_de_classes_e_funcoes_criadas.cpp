@@ -259,22 +259,33 @@ void Exibe_predadores() {
     }
 }
 
-void Analisa_conexoes() {
-    Grafo g = Cria_grafo();
 
-    if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
+//FUNCIONALIDADE 13 - DFS
+
+//a funcao Analisa_Conexoes() eh a funcao de pesquisa em profundidade do grafo
+//essa funcao cria o grafo e chama a rotina Grafo::Profundidade para retornar a qtd
+//de componentes conexos dentro do grafo para entao retornar o resultado
+
+//as duas principais funcoes utilizadas aqui são Profundidade e Profundidade_recursao, explicadas a seguir
+
+void Analisa_conexoes() {
+    Grafo g = Cria_grafo();      //cria o grafo
+
+    if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo, da erro e nao executa a funcao
     {
         cout << ERRO_PADRAO;
         return;
     }
 
-
-    int componente;
-
-    componente=g.Profundidade();
+    int componente;     
+    componente=g.Profundidade();    //chama a funcao de pesquisa em profundidade, necessaria para saber se um grafo eh ou nao eh fortemente conexo
+                                    //essa funcao retorna a qtd de componentes conexos do grafo
 
     //se o numero de componentes conexos for igual ao nro de vertices o grafo eh fortemente conexo
     //assim partindo de qualquer vertice eh possivel chegar em todos os outros vertices do grafo
+
+    //caso isso nao seja verdade ele nao eh fortemente conexo, mas ainda sim podem ter vertices que tenham a capacidade
+    //de chegar em todos os outros vertices do grafo, so nao sao todos
     if(componente==g.numero_de_vertices)
         cout << "Sim, o grafo e fortemente conexo e possui 1 componente";
     else
@@ -282,62 +293,81 @@ void Analisa_conexoes() {
     
 }
 
-// Recursive function for DFS traversal
-void Grafo::Profundidade_recursao(Predador vertice,int x, vector<vis> &visitado){
-    int i;
-    visitado[x].visitado=true;
-
-    for (const auto &y : vertice.presas) // passa pelas presas do predador atual
-    {
-        for (const auto &z : vertices)  // pasa pelos predadores de novo de acordo com os nomes na lista de presas do que veio antes
-        { 
-
-            if (y.nome_da_presa == z.predador.nome) //se os nomes baterem, ve se ja foi visitado
-            {
-                if(y.nome_da_presa==vertice.predador.nome)
-                    return;
-
-                for(i=0;i<numero_de_vertices;i++)           //pega o indice do predador na lista auxiliar
-                    if(visitado[i].nome==z.predador.nome)
-                        break;
-
-                if (visitado[i].visitado == false)
-                    Profundidade_recursao(z, i, visitado);
-                
-            }
-        }
-    }
-}
-
 // funcao principal da pesquisa em profundidade
-int Grafo::Profundidade(){
-    int componentes=0, aux,k;
-    vector<vis> visitado;
-    vis temp;
+//a funcao realiza a pesquisa em profundidade de forma recursiva em todos os vertices do grafo
 
+//para poder realizar a pesquisa um vetor auxiliar eh feito para que indices possam ser utilizados para acesso
+//de outra forma ao nome das especies pesquisadas.
+//essa foi uma abordagem que pensamos em usar por conta da forma de armazenar os vertices em formato <set>, que impede
+//o acesso direto dos dados. assim eh possivel indexar de uma forma os nomes das presas na ordem que temos, sendo necessario um pouco de
+//espaco auxiliar a mais
 
-    temp.visitado=false; 
-    for (const auto &x : vertices){
-        temp.nome=x.predador.nome;
+int Grafo::Profundidade()
+{
+    int componentes = 0; // nro de componentes conexos
+    int aux;             // auxiliar para checar se um componente eh conexo
+    int k;               // indice do vertice que entrara na recursao
+
+    vector<vis> visitado; // vetor auxiliar
+    vis temp;             // vetor auxiliar
+
+    // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os vertices sao considerados nao visitados incialmente
+    // e tambem eh destacado o nome da especie
+    temp.visitado = false;
+    for (const auto &x : vertices)
+    {
+        temp.nome = x.predador.nome;
         visitado.push_back(temp);
     }
 
-    // chama a funcao recursiva para cada um dos vertices do grafo
-    k=-1;
-    for (const auto &x : vertices)
+    k = -1; // inicializa o valor referente ao indice de cada vertice original do vector auxiliar
+            //  chama a funcao recursiva para cada um dos vertices do grafo dentro do loop
+    for (const auto &vert_atual : vertices)
     {
-        k++;
-        aux=0;
-        Profundidade_recursao(x,k,visitado);   //inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem da lista
-        cout << "Partindo de: " << x.predador.nome << "\n";
-        for(int i=0;i<numero_de_vertices;i++){   //soma os vertices que visitou e reinicia o vetor
+        k++; // atualiza o indice do vertice que entrara na recursao
+        aux = 0;
+        Profundidade_recursao(vert_atual, k, visitado); // inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem do vector auxiliar em si
+        cout << "Partindo de: " << vert_atual.predador.nome << "\n";
+
+        // quando a recursao de um vertice acaba, a contagem de vertices visitados ocorre na variavel aux, ja que o vetor auxiliar foi modificado na funcao anterior
+        for (int i = 0; i < numero_de_vertices; i++)
+        { // conta os vertices que visitou e reinicia o booleano de visita para as proximas iteracoes
             cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
-            aux+=visitado[i].visitado;
-            visitado[i].visitado=false;
+            aux += visitado[i].visitado;
+            visitado[i].visitado = false;
         }
-        if(aux==numero_de_vertices)             //se o nro de vertices visitados for igual ao nro de vertices eh conexo
+        if (aux == numero_de_vertices) // se o nro de vertices visitados for igual ao nro de vertices o componente eh conexo
             componentes++;
     }
 
     return componentes;
+}
+
+// funcao recursiva do processo
+// basicamente a recursao so vai parar quando todos os itens da "rede" que parte do vertice da iteracao forem visitados
+
+void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado)
+{
+    int i;
+    visitado[x].visitado = true; // marca o vertice atual como visitado no vetor auxiliar
+
+    for (const auto &presas_vertice : vertice.presas) // passa pela lista de presas do predador atual
+    {
+        for (const auto &lista_predador : vertices) // pasa pelos predadores de novo de acordo com os nomes na lista de presas do que veio antes
+                                                    // eh nesse for que estao os predadores (com nome na lista de presas) que serao enviados para recursao novamente
+        {
+            if (presas_vertice.nome_da_presa == lista_predador.predador.nome) // se o nome fizer, tanto parte da lista de presas quanto a de vertices(predadores) faz as checagens
+            {
+                if (presas_vertice.nome_da_presa == vertice.predador.nome) // se a presa preda ela mesma da retorno, bicho burro
+                    return;
+
+                for (i = 0; i < numero_de_vertices; i++) // pega o indice do predador/presa na lista auxiliar
+                    if (visitado[i].nome == lista_predador.predador.nome)
+                        break;
+
+                if (visitado[i].visitado == false) // se esse vertice ainda nao foi visitado, chamada recursiva
+                    Profundidade_recursao(lista_predador, i, visitado); //funcao recebe o vertice que ainda nao foi visitado, a lista auxiliar e o indice referente
+            }
+        }
+    }
 }
