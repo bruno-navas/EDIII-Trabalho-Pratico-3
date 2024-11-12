@@ -6,7 +6,7 @@
 #include <string.h>
 #include <vector>
 
-#include "Metodos_arqbin.h"     //manipulacoes no arquivo binario
+#include "funcoes_arqbin.h"     //manipulacoes no arquivo binario
 #include "Funcionalidades.h"    //funcionalidades do programa
 
 using namespace std;

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "FuncoesAuxiliares.h"
-#include "Metodos_arqbin.h"
+#include "funcoes_arqbin.h"
 #include "Classes_metodos_grafo.h"
 
 using namespace std;
