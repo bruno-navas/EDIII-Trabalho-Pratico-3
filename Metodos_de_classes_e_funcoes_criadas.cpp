@@ -387,6 +387,7 @@ void Relacao_presa_predador(){
                                                     //funcao retorna -1 se nao houver caminho entre os dois
 
         //ao fim da pesquisa atual checa se teve ou nao caminho e exibe o resultado
+        cout << n_predador << " " << n_presa << ": ";
         if(peso_caminho==-1)    
             cout << "CAMINHO INEXISTENTE";
         else 
