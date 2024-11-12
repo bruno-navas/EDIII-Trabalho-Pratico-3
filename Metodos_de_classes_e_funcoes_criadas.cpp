@@ -378,7 +378,7 @@ void Relacao_presa_predador(){
         scan_quote_string(n_presa);
 
 
-        peso_caminho=dijkstra(n_predador,n_presa);  //chama a funcao do algoritmo de dijkstra para busca em largura
+        peso_caminho=g.dijkstra(n_predador,n_presa);//executa a rotina do algoritmo de dijkstra no grafo
                                                     //funcao acha o menor caminho entre dois vertices
                                                     //funcao retorna -1 se nao houver caminho entre os dois
 
