@@ -311,7 +311,7 @@ void Grafo::Profundidade_recursao(Predador vertice,int x, vector<vis> &visitado)
 
 // funcao principal da pesquisa em profundidade
 int Grafo::Profundidade(){
-    int componentes=0, aux=0,k;
+    int componentes=0, aux,k;
     vector<vis> visitado;
     vis temp;
 
@@ -327,10 +327,11 @@ int Grafo::Profundidade(){
     for (const auto &x : vertices)
     {
         k++;
-
+        aux=0;
         Profundidade_recursao(x,k,visitado);   //inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem da lista
 
         for(int i=0;i<numero_de_vertices;i++){   //soma os vertices que visitou e reinicia o vetor
+            cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
             aux+=visitado[i].visitado;
             visitado[i].visitado=false;
         }
