@@ -264,7 +264,6 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
     {
         string atual = fila.top(); // pega o vertice, remove ele da fila e salva o indice do vetor auxiliar D no proximo for
         fila.pop();
-
         v = 0;
         for (auto &topo : vertices) // acha o vertice atual para passar por todas as presas dele
         {
@@ -276,19 +275,20 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
                 {
                     string proximo = presa.nome_da_presa; // pega o nome da presa e o peso, e salva o indice no vetor auxiliar
 
-                    for (u = 0; u < numero_de_vertices; u++) // pega o indice do predador/presa na lista auxiliar
+                    for (u = 0; u < numero_de_vertices; u++){ // pega o indice do predador/presa na lista auxiliar
                         if (D[u].nome == proximo)
                             break;
-
+                    }
                     int peso = presa.populacao_do_predador;
 
-                    // se o caminho que passa por essa presa eh menor
-                    if (D[v].peso > D[u].peso + peso)
+                    // se o caminho que passa por essa presa eh menor ou se ainda nao passou por la
+                    if (D[u].peso > D[v].peso + peso || D[u].peso==-1)
                     {
                         // atualiza a distancia do caminho
-                        D[v].peso = D[u].peso + peso;
+                        D[u].peso = D[v].peso + peso;
                         fila.push(proximo);
                     }
+
                 }
             }
             v++; // atualiza indice do vetor auxiliar
@@ -296,9 +296,6 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
     }
 
     // retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
-    for (i = 0; i < numero_de_vertices; i++)
-        cout << D[i].nome << " " << D[i].peso << "\n";
-    
     for (i = 0; i < numero_de_vertices; i++)
         if (D[i].nome == n_presa)
             break;
