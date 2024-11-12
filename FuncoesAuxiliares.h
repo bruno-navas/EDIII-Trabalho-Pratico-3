@@ -7,4 +7,7 @@
 #define ERRO_CADASTRO   "Informação ja inserida no arquivo\n" //mensagem de erro para dados ja cadastrados
 
 void Seletor_de_funcionalidade (int selecao);
+void scan_quote_string(char *str);
+char* strsep(char** stringp, const char* delim);
+
 #endif //FUNCOESPADRAO_H

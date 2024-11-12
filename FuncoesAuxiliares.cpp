@@ -1,5 +1,9 @@
-#include "FuncoesPadrao.h"
-#include "Declaracao_de_classes_e_funcoes_criadas.h"
+#include "FuncoesAuxiliares.h"
+#include "Funcionalidades.h"
+#include <iostream>
+#include <string.h>
+
+using namespace std;
 
 void Seletor_de_funcionalidade (int selecao) {
     switch (selecao) {

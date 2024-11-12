@@ -1,8 +1,7 @@
 #include <iostream>
-#include <fstream>
 using namespace std;
 
-#include "./FuncoesPadrao.h"
+#include "FuncoesAuxiliares.h"  //seletor de funcionalidade
 
 int main() {
     int funcao_selecionada;
