@@ -10,7 +10,6 @@
         "string": "cpp",
         "unordered_map": "cpp",
         "vector": "cpp",
-        "system_error": "cpp",
-        "classes_metodos_grafo.h": "c"
+        "system_error": "cpp"
     }
 }
