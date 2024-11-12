@@ -1,6 +1,7 @@
 #include <cstring>
 #include <utility>
 #include <vector>
+#include <queue>
 
 #include "FuncoesAuxiliares.h"
 #include "funcoes_arqbin.h"
@@ -233,13 +234,18 @@ void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado
 //caso nao exista um caminho entre o vertice inicial e o alvo o peso
 //no vetor D vale -1
 
-int Grafo::dijkstra(char n_predador[91],char n_presa[91])
-{   
-    int i;
-    int peso=0;
-    vector<dij> D;  //vetor D que armazena os pesos para chegar ate cada vertice partindo de um vertice de predador
-    dij temp;             // vetor auxiliar
-    //inicializa o vetor auxiliar D
+int Grafo::dijkstra(char n_predador[91], char n_presa[91])
+{
+
+    if (!strcmp(n_predador, n_presa)) // caso obvio
+        return 0;
+
+    int i, v, u;
+    int peso = 0;
+    vector<dij> D; // vetor D que armazena os pesos para chegar ate cada vertice partindo de um vertice de predador
+    dij temp;      // vetor auxiliar
+    priority_queue<string> fila;
+    // inicializa o vetor auxiliar D
 
     // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como -1 exceto o inicial
     // e tambem eh destacado o nome da especie
@@ -247,24 +253,51 @@ int Grafo::dijkstra(char n_predador[91],char n_presa[91])
     {
         temp.peso = -1;
         temp.nome = x.predador.nome;
-        if (x.predador.nome == n_predador)  //peso do vertice de partida eh zero
-            temp.peso=0;
+        if (temp.nome == n_predador) // peso do vertice de partida eh zero
+            temp.peso = 0;
         D.push_back(temp);
     }
 
+    fila.push(n_predador); // insere raiz da pesquisa na fila
 
+    while (!fila.empty()) // enquanto a fila n estiver vazia
+    {
+        string atual = fila.top(); // pega o vertice, remove ele da fila e salva o indice do vetor auxiliar D no proximo for
+        fila.pop();
 
+        v = 0;
+        for (auto &topo : vertices) // acha o vertice atual para passar por todas as presas dele
+        {
+            if (topo.predador.nome == atual)
+            {
 
+                // passa por todas as presas do vertice atual
+                for (auto &presa : topo.presas)
+                {
+                    string proximo = presa.nome_da_presa; // pega o nome da presa e o peso, e salva o indice no vetor auxiliar
 
+                    for (u = 0; u < numero_de_vertices; u++) // pega o indice do predador/presa na lista auxiliar
+                        if (D[u].nome == proximo)
+                            break;
 
+                    int peso = presa.populacao_do_predador;
 
-    //retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
-    for (i = 0; i < numero_de_vertices; i++) 
+                    // se o caminho que passa por essa presa eh menor
+                    if (D[v].peso > D[u].peso + peso)
+                    {
+                        // atualiza a distancia do caminho
+                        D[v].peso = D[u].peso + peso;
+                        fila.push(proximo);
+                    }
+                }
+            }
+            v++; // atualiza indice do vetor auxiliar
+        }
+    }
+
+    // retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
+    for (i = 0; i < numero_de_vertices; i++)
         if (D[i].nome == n_presa)
             break;
     return D[i].peso;
 }
-
-
-
-

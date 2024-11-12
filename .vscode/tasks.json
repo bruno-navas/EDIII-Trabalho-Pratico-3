@@ -7,8 +7,10 @@
             "args": [
                 "-fdiagnostics-color=always",
                 "-g",
-                "${fileDirname}/FuncoesPadrao.cpp",
-                "${fileDirname}/Metodos_de_classes_e_funcoes_criadas.cpp",
+                "${fileDirname}/Funcionalidades.cpp",
+                "${fileDirname}/Classes_metodos_grafo.cpp",
+                "${fileDirname}/funcoes_arqbin.cpp",
+                "${fileDirname}/FuncoesAuxiliares.cpp",
                 "${fileDirname}/main.cpp",
                 "-o",
                 "${fileDirname}/main",
