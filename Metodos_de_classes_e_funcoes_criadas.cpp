@@ -361,8 +361,8 @@ void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado
                 if (presas_vertice.nome_da_presa == vertice.predador.nome) // se a presa preda ela mesma da retorno, bicho burro
                     return;
 
-                for (i = 0; i < numero_de_vertices; i++) // pega o indice do predador/presa na lista auxiliar
-                    if (visitado[i].nome == lista_predador.predador.nome)
+                for (i = 0; i < numero_de_vertices; i++)                    // pega o indice do predador/presa na lista auxiliar
+                    if (visitado[i].nome == lista_predador.predador.nome)   // nao eh tao eficiente mas foi a forma pensada para indexar o <set>
                         break;
 
                 if (visitado[i].visitado == false) // se esse vertice ainda nao foi visitado, chamada recursiva
