@@ -180,12 +180,12 @@ int Grafo::Profundidade()
         k++; // atualiza o indice do vertice que entrara na recursao
         aux = 0;
         Profundidade_recursao(vert_atual, k, visitado); // inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem do vector auxiliar em si
-        cout << "Partindo de: " << vert_atual.predador.nome << "\n";
+        //cout << "Partindo de: " << vert_atual.predador.nome << "\n";
 
         // quando a recursao de um vertice acaba, a contagem de vertices visitados ocorre na variavel aux, ja que o vetor auxiliar foi modificado na funcao anterior
         for (int i = 0; i < numero_de_vertices; i++)
         { // conta os vertices que visitou e reinicia o booleano de visita para as proximas iteracoes
-            cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
+            //cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
             aux += visitado[i].visitado;
             visitado[i].visitado = false;
         }
@@ -247,11 +247,11 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
     priority_queue<string> fila;
     // inicializa o vetor auxiliar D
 
-    // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como -1 exceto o inicial
+    // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como infinito exceto o inicial
     // e tambem eh destacado o nome da especie
     for (const auto &x : vertices)
     {
-        temp.peso = -1;
+        temp.peso = __INT_MAX__; //infinito
         temp.nome = x.predador.nome;
         if (temp.nome == n_predador) // peso do vertice de partida eh zero
             temp.peso = 0;
@@ -282,7 +282,7 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
                     int peso = presa.populacao_do_predador;
 
                     // se o caminho que passa por essa presa eh menor ou se ainda nao passou por la
-                    if (D[u].peso > D[v].peso + peso || D[u].peso==-1)
+                    if (D[u].peso > D[v].peso + peso)
                     {
                         // atualiza a distancia do caminho
                         D[u].peso = D[v].peso + peso;

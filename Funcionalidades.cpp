@@ -139,7 +139,7 @@ void Relacao_presa_predador(){
 
         //ao fim da pesquisa atual checa se teve ou nao caminho e exibe o resultado
         cout << n_predador << " " << n_presa << ": ";
-        if(peso_caminho==-1)    
+        if(peso_caminho==__INT_MAX__)    
             cout << "CAMINHO INEXISTENTE";
         else 
             cout << peso_caminho;
