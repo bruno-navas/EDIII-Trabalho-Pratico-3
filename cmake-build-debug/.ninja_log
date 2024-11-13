@@ -1,9 +1,0 @@
-# ninja log v6
-2	279	7530300714737331	build.ninja	967a57e1638dc406
-71	1098	7526161549518190	CMakeFiles/main.dir/main.cpp.obj	bb02658e5435b2f1
-1369	1757	7527340028523967	main.exe	94ff8b04738635ef
-109	1369	7527340015924416	CMakeFiles/main.dir/Metodos_de_classes_e_funcoes_criadas.cpp.obj	9bbad72195609a61
-122	1236	7530300714737331	build.ninja	967a57e1638dc406
-50	1446	7530300717114116	CMakeFiles/main.dir/main.cpp.obj	bb02658e5435b2f1
-59	1938	7530300717206602	CMakeFiles/main.dir/Metodos_de_classes_e_funcoes_criadas.cpp.obj	9bbad72195609a61
-1939	2536	7530300736010778	main.exe	94ff8b04738635ef

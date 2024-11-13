@@ -1,8 +1,7 @@
 #include <iostream>
-#include <fstream>
 using namespace std;
 
-#include "FuncoesPadrao.cpp"
+#include "FuncoesAuxiliares.h"  //seletor de funcionalidade
 
 int main() {
     int funcao_selecionada;
@@ -12,3 +11,5 @@ int main() {
 
     return 0;
 }
+
+//14 binarioconexo.bin 1 "abelisaurus" "afrovenator"
