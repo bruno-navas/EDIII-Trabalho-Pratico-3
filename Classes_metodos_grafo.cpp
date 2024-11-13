@@ -31,10 +31,11 @@ ostream& operator<<(ostream& out, const Predador& predador) {
 
     return out;
 }
+
 //CONSTRUTOR DO GRAFO DADO UM PONTEIRO PRA ARQUIVO, se tiver problema no inicio retorna o grafo com V=-1 para encerrar o programa
 Grafo::Grafo(FILE* arquivo) {
 
-    if(arquivo==NULL){              //se o arquivo nao existir
+    if(arquivo==nullptr){              //se o arquivo nao existir
         numero_de_vertices=-1;
         return;
     }
@@ -111,6 +112,7 @@ Grafo::Grafo(FILE* arquivo) {
         }
     }
 }
+
 //METODOS USADOS NA FUNCAO 10///////////////////////////////////////////////////////////////////////
 
 //metodo que chama o construtor do grafo com um ponteiro de arquivo binario inicializado de acordo com o nome dado
@@ -122,7 +124,6 @@ Grafo Cria_grafo() {
 
     return Grafo (arq_bin);
 }
-
 
 void Grafo::exibe_grafo() const {
 
@@ -143,6 +144,51 @@ void Grafo::exibe_grafo() const {
 
 //METODOS USADOS NA FUNCIONALIDADE 12/////////////////////////////////////////////////////////////
 
+int Branco = 0;
+int Cinza = 1;
+int Preto = 2;
+
+void Grafo::detecta_ciclos() {
+    int cor[numero_de_vertices+1];
+    bool ciclo = false;
+
+    for (int i=0; i<numero_de_vertices; i++) {
+        if (cor[i]==Branco) {
+            ciclo |= auxiliar_ciclos(i, cor);
+        }
+    }
+}
+
+bool Grafo::auxiliar_ciclos(int node, int cor[]) {
+    // esse vértice está na pilha, há um ciclo.
+    if(cor[node] == Cinza){
+        return true;
+    }
+    // já chamamos essa função pra esse vértice, não precisamos
+    // chamar novamente(se houver um ciclo, já foi levado em conta)
+    if(cor[node] == Preto){
+        return false;
+    }
+
+    bool b = false;
+
+    cor[node] = Cinza;
+
+    auto it = vertices.begin();
+    advance(it, node);
+    const Predador& predador = *it;
+
+    int v = 0;
+    // este vértice está na pilha agora
+    for(auto presa: predador.presas){
+        b |= auxiliar_ciclos(v, cor); // basta que uma instância do dfs detecte ciclo para
+        // que esse 'true' se propague pela pilha toda.
+        v++;
+    }
+    cor[node] = Preto;
+    // este vértice saiu da pilha
+    return b;
+}
 
 //METODOS USADOS NA FUNCIONALIDADE 13///////////////////////////////////////////////////////////
 
@@ -199,7 +245,7 @@ int Grafo::Profundidade()
 // funcao recursiva do processo
 // basicamente a recursao so vai parar quando todos os itens da "rede" que parte do vertice da iteracao forem visitados
 
-void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado)
+void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<vis> &visitado)
 {
     int i;
     visitado[x].visitado = true; // marca o vertice atual como visitado no vetor auxiliar
@@ -234,8 +280,7 @@ void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado
 //caso nao exista um caminho entre o vertice inicial e o alvo o peso
 //no vetor D vale -1
 
-int Grafo::dijkstra(char n_predador[91], char n_presa[91])
-{
+int Grafo::dijkstra(char n_predador[91], char n_presa[91]) const {
 
     if (!strcmp(n_predador, n_presa)) // caso obvio
         return 0;
@@ -247,11 +292,11 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
     priority_queue<string> fila;
     // inicializa o vetor auxiliar D
 
-    // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como -1 exceto o inicial
+    // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como infinito exceto o inicial
     // e tambem eh destacado o nome da especie
     for (const auto &x : vertices)
     {
-        temp.peso = -1;
+        temp.peso = __INT_MAX__; //infinito
         temp.nome = x.predador.nome;
         if (temp.nome == n_predador) // peso do vertice de partida eh zero
             temp.peso = 0;
@@ -282,7 +327,7 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91])
                     int peso = presa.populacao_do_predador;
 
                     // se o caminho que passa por essa presa eh menor ou se ainda nao passou por la
-                    if (D[u].peso > D[v].peso + peso || D[u].peso==-1)
+                    if (D[u].peso > D[v].peso + peso)
                     {
                         // atualiza a distancia do caminho
                         D[u].peso = D[v].peso + peso;

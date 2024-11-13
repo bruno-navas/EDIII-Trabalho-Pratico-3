@@ -3,8 +3,7 @@
 
 using namespace std;
 #include <iostream>
-#include <string.h>
-#include <vector>
+#include <cstring>
 
 class Cabecalho{
 private:
@@ -58,6 +57,4 @@ public:
     friend class Grafo;
 };
 
-
-
-#endif //METODOS_ARQBIN_H
+#endif //FUNCOES_ARQBIN_H
