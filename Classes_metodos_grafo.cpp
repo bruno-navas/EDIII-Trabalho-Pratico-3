@@ -47,15 +47,10 @@ Grafo::Grafo(FILE* arquivo) {
 
         // Se p estiver em vertices, it_predador vai apontar para sua posição
         if (it_predador!=vertices.end()) {
-            Predador aux_predador = *it_predador; // Copiamos seus dados para um auxiliar
+            auto& aux_predador = const_cast<Predador&>(*it_predador); // Copiamos seus dados para um auxiliar
             aux_predador.predador.grau_saida++; // Aumentamos seu grau de saída
             aux_predador.predador.grau++; // Aumentamos seu grau
             aux_predador.insere_presa(pr); // Inserimos a nova presa
-
-            // Como os sets são imutáveis, precisamos reinserir o predador com a nova presa e apagar o antigo
-
-            vertices.erase(*it_predador); // Apagamos o predador antigo
-            vertices.insert(aux_predador); // Adicionamos o novo
         }
         // Adicionamos a presa lida ao predador e então, adicionamos o predador aos vertices
         else {
@@ -65,30 +60,25 @@ Grafo::Grafo(FILE* arquivo) {
         }
     }
 
-    int n_presas = 1;
+    //Loops para a definição do grau de entrada dos vértices
+     for (const auto& x : vertices) {
+         for (const auto& y : x.presas) {
+              Predador busca_presa = x; // Predador auxiliar recebe os dados do Predador atual
+              //cout << busca_presa << endl;
+              // Como a busca em vertices se dá pelo nome do Predador, precisamos trocá-lo
+              busca_presa.predador.nome = y.nome_da_presa; // Auxiliar recebe o nome da presa atual
 
-    // Loops para a definição do grau de entrada dos vértices
-    for (auto x : vertices) {
-        for (auto y : x.presas) {
-             Predador busca_presa = x; // Predador auxiliar recebe os dados do Predador atual
-             //cout << busca_presa << endl;
-             // Como a busca em vertices se dá pelo nome do Predador, precisamos trocá-lo
-             busca_presa.predador.nome = y.nome_da_presa; // Auxiliar recebe o nome da presa atual
+              // Procura a presa em vértices (a presa também é predadora)
+              auto it_presa = vertices.find(busca_presa);
 
-             // Procura a presa em vértices (a presa também é predadora)
-             auto it_presa = vertices.find(busca_presa);
-
-             // Se a presa estiver em vertices, it_presa recebe sua posição
-             if(it_presa!=vertices.end()) {
-                 Predador aux_presa = *it_presa; // Copiamos seus dados para um auxiliar
-                 aux_presa.predador.grau_entrada++; // Aumentamos seu grau de entrada
-                 aux_presa.predador.grau++; // Aumentamos seu grau
-
-                 vertices.erase(*it_presa); // Apagamos o predador antigo
-                 vertices.insert(aux_presa); // Adicionamos o novo
-            }
-        }
-    }
+              // Se a presa estiver em vertices, it_presa recebe sua posição
+              if(it_presa!=vertices.end()) {
+                  auto& aux_presa = const_cast<Predador&>(*it_presa); // Copiamos seus dados para um auxiliar
+                  aux_presa.predador.grau_entrada++; // Aumentamos seu grau de entrada
+                  aux_presa.predador.grau++; // Aumentamos seu grau
+             }
+         }
+     }
 }
 
 
