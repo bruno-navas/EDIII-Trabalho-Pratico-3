@@ -11,6 +11,7 @@
                 "${fileDirname}/Classes_metodos_grafo.cpp",
                 "${fileDirname}/funcoes_arqbin.cpp",
                 "${fileDirname}/FuncoesAuxiliares.cpp",
+                "${fileDirname}/Classes_metodos_presa_e_predador.cpp",
                 "${fileDirname}/main.cpp",
                 "-o",
                 "${fileDirname}/main",
