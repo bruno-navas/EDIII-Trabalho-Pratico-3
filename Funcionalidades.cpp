@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "Funcionalidades.h"
 #include "FuncoesAuxiliares.h"
 #include "Classes_metodos_grafo.h"
@@ -101,9 +102,9 @@ void Analisa_conexoes() {
     //caso isso nao seja verdade ele nao eh fortemente conexo, mas ainda sim podem ter vertices que tenham a capacidade
     //de chegar em todos os outros vertices do grafo, so nao sao todos
     if(componente==g.numero_de_vertices)
-        cout << "Sim, o grafo e fortemente conexo e possui 1 componente";
+        cout << "Sim, o grafo é fortemente conexo e possui 1 componente.";
     else
-        cout << "Nao, o grafo nao e fortemente conexo e possui " << componente << " componentes";
+        cout << "Não, o grafo não é fortemente conexo e possui " << componente << " componentes.";
     
 }
 
@@ -133,7 +134,8 @@ void Relacao_presa_predador(){
 
     for(int i=0;i<pesquisas;i++)    //loop das pesquisas
     {   
-        scan_quote_string(n_predador);  //le o primeiro e ultimo vertice da pesquisa
+        getchar();
+        scan_quote_string(n_predador);
         scan_quote_string(n_presa);
 
 

@@ -278,8 +278,7 @@ void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<v
 //caso nao exista um caminho entre o vertice inicial e o alvo o peso
 //no vetor D vale -1
 
-int Grafo::dijkstra(char n_predador[91], char n_presa[91]) const {
-
+int Grafo::dijkstra(string n_predador, string n_presa) const {
     bool vert_1=false,vert_2=false;     //checa se ambos os membros fazem parte da lista de vertices
     for(const auto &x : vertices)
     {
@@ -287,15 +286,13 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91]) const {
             vert_1=true;
         if(x.predador.nome==n_presa)
             vert_2=true;
-        if(vert_1 && vert_2)    //se os dois fizerem parte sai do loop
-            break;
     }    
 
-    if(!vert_1 || !vert_2)  //se um dos dois nao estiver na lista de vertices n tem caminho
+    if(!vert_1)  //se o inicio nao estiver na lista de vertices n tem caminho
         return __INT_MAX__;
 
-    if (!strcmp(n_predador, n_presa)) // caso obvio
-        return __INT_MAX__;
+    if (n_predador==n_presa) // caso obvio
+        return 0;
 
     int i, v, u;
     int peso = 0;
@@ -326,35 +323,54 @@ int Grafo::dijkstra(char n_predador[91], char n_presa[91]) const {
         {
             if (topo.predador.nome == atual)
             {
-
+                
                 // passa por todas as presas do vertice atual
                 for (auto &presa : topo.presas)
-                {
-                    string proximo = presa.nome_da_presa; // pega o nome da presa e o peso, e salva o indice no vetor auxiliar
+                {   
+                        string proximo = presa.nome_da_presa; // pega o nome da presa e o peso, e salva o indice no vetor auxiliar
 
-                    for (u = 0; u < numero_de_vertices; u++){ // pega o indice do predador/presa na lista auxiliar
-                        if (D[u].nome == proximo)
-                            break;
-                    }
-                    int peso = presa.populacao_do_predador;
+                        for (u = 0; u < numero_de_vertices; u++){ // pega o indice do predador/presa na lista auxiliar
+                            if (D[u].nome == proximo)
+                                break;
+                        }
+                        int peso = presa.populacao_do_predador;
 
-                    // se o caminho que passa por essa presa eh menor ou se ainda nao passou por la
-                    if (D[u].peso > D[v].peso + peso)
-                    {
-                        // atualiza a distancia do caminho
-                        D[u].peso = D[v].peso + peso;
-                        fila.push(proximo);
-                    }
-
+                        // se o caminho que passa por essa presa eh menor ou se ainda nao passou por la
+                        if (D[u].peso > D[v].peso + peso)
+                        {
+                            // atualiza a distancia do caminho
+                            D[u].peso = D[v].peso + peso;
+                            fila.push(proximo);
+                        }
                 }
             }
             v++; // atualiza indice do vetor auxiliar
         }
     }
-
+    int resultado=__INT_MAX__;
     // retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
-    for (i = 0; i < numero_de_vertices; i++)
-        if (D[i].nome == n_presa)
-            break;
-    return D[i].peso;
+    if (vert_2) // se a presa for um vertice
+    {
+        for (i = 0; i < numero_de_vertices; i++)
+            if (D[i].nome == n_presa)
+                return D[i].peso;
+    }
+    else // se a presa nao tiver vertice
+    {
+        for (auto &topo : vertices)
+        {
+            for (auto &y : topo.presas)
+            {
+                if (y.nome_da_presa == n_presa)
+                {
+                    for (i = 0; i < numero_de_vertices; i++)
+                        if (topo.predador.nome == D[i].nome && (D[i].peso+y.populacao_do_predador) < resultado && D[i].peso!=__INT_MAX__){
+                            resultado = D[i].peso+y.populacao_do_predador;
+                        }
+                }
+            }
+        }
+        
+    }
+    return resultado;
 }

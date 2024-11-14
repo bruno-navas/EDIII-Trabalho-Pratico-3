@@ -1,6 +1,6 @@
 #ifndef FUNCOESPADRAO_H
 #define FUNCOESPADRAO_H
-
+#include <string>
 #define ERRO_PADRAO     "Falha no processamento do arquivo\n" //mensagem padrao de erro
 #define ERRO_REGISTRO   "Registro Inexistente.\n"              //mensagem de erro para registro inexistente
 #define ERRO_COMANDO    "O comando digitado nao existe\n"     //mensagem de erro caso o usuario digite um comando invalido
