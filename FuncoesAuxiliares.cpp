@@ -1,8 +1,7 @@
 #include "FuncoesAuxiliares.h"
 #include "Funcionalidades.h"
 #include <iostream>
-#include <string>
-#include <string.h>
+#include <cstring>
 
 using namespace std;
 
@@ -15,7 +14,7 @@ void Seletor_de_funcionalidade (int selecao) {
             Exibe_predadores();
             break;
         case 12:
-            //Identifica_ciclos();
+            Identifica_ciclos();
             break;
         case 13:
             Analisa_conexoes();             //busca em profundidade 
@@ -37,21 +36,23 @@ void scan_quote_string(char *str) {
 
 	char R;
 
-	while((R = getchar()) != EOF && isspace(R)); // ignorar espaços, \r, \n...
+	while((R = getchar()) != EOF && isspace(R)) {
+	    // ignorar espaços, \r, \n...
 
-	if(R == 'N' || R == 'n') { // campo NULO
-		getchar(); getchar(); getchar(); // ignorar o "ULO" de NULO.
-		strcpy(str, ""); // copia string vazia
-	} else if(R == '\"') {
-		if(scanf("%[^\"]", str) != 1) { // ler até o fechamento das aspas
-			strcpy(str, "");
-		}
-		getchar(); // ignorar aspas fechando
-	} else if(R != EOF){ // vc tá tentando ler uma string que não tá entre aspas! Fazer leitura normal %s então, pois deve ser algum inteiro ou algo assim...
-		str[0] = R;
-		scanf("%s", &str[1]);
-	} else { // EOF
-		strcpy(str, "");
+	    if(R == 'N' || R == 'n') { // campo NULO
+	        getchar(); getchar(); getchar(); // ignorar o "ULO" de NULO.
+	        strcpy(str, ""); // copia string vazia
+	    } else if(R == '\"') {
+	        if(scanf("%[^\"]", str) != 1) { // ler até o fechamento das aspas
+	            strcpy(str, "");
+	        }
+	        getchar(); // ignorar aspas fechando
+	    } else if(R != EOF){ // vc tá tentando ler uma string que não tá entre aspas! Fazer leitura normal %s então, pois deve ser algum inteiro ou algo assim...
+	        str[0] = R;
+	        scanf("%s", &str[1]);
+	    } else { // EOF
+	        strcpy(str, "");
+	    }
 	}
 }
 

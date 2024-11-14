@@ -10,7 +10,7 @@
 using namespace std;
 
 Presa::Presa(int populacao, string nome) {
-    populacao_do_predador = populacao;;
+    populacao_do_predador = populacao;
     nome_da_presa = std::move(nome);
 }
 
@@ -31,10 +31,11 @@ ostream& operator<<(ostream& out, const Predador& predador) {
 
     return out;
 }
+
 //CONSTRUTOR DO GRAFO DADO UM PONTEIRO PRA ARQUIVO, se tiver problema no inicio retorna o grafo com V=-1 para encerrar o programa
 Grafo::Grafo(FILE* arquivo) {
 
-    if(arquivo==NULL){              //se o arquivo nao existir
+    if(arquivo==nullptr){              //se o arquivo nao existir
         numero_de_vertices=-1;
         return;
     }
@@ -46,7 +47,7 @@ Grafo::Grafo(FILE* arquivo) {
         return;
     }
 
-    numero_de_vertices = 0;
+    numero_de_vertices = numero_de_ciclos = 0;
 
     fseek(arquivo, 1600, SEEK_SET);
 
@@ -111,6 +112,7 @@ Grafo::Grafo(FILE* arquivo) {
         }
     }
 }
+
 //METODOS USADOS NA FUNCAO 10///////////////////////////////////////////////////////////////////////
 
 //metodo que chama o construtor do grafo com um ponteiro de arquivo binario inicializado de acordo com o nome dado
@@ -122,7 +124,6 @@ Grafo Cria_grafo() {
 
     return Grafo (arq_bin);
 }
-
 
 void Grafo::exibe_grafo() const {
 
@@ -143,6 +144,49 @@ void Grafo::exibe_grafo() const {
 
 //METODOS USADOS NA FUNCIONALIDADE 12/////////////////////////////////////////////////////////////
 
+int Branco = 0;
+int Cinza = 1;
+int Preto = 2;
+
+void Grafo::detecta_ciclos()  {
+
+    vector<int> visitados(numero_de_vertices);
+    int pos = 0;
+
+    for (const auto& x: vertices) {
+        if (visitados[pos]==Branco) {
+            auxiliar_ciclos(x, pos, visitados);
+        }
+        pos++;
+    }
+
+    cout << "Quantidade de ciclos: " << numero_de_ciclos << endl;
+}
+
+void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) {
+    if (visitados[pos]==Cinza) {
+        numero_de_ciclos++;
+        visitados[pos]=Preto;
+    }
+    if (visitados[pos]==Preto) {
+        return;
+    }
+
+    visitados[pos]=Cinza;
+
+    for (const auto& x: p.presas) {
+        Predador novo_p = p;
+        novo_p.predador.nome = x.nome_da_presa;
+
+        if (auto it_presa = vertices.find(novo_p); it_presa!=vertices.end()) {
+            novo_p = *it_presa;
+            const int nova_pos = static_cast<int>(distance(vertices.begin(), it_presa));
+            auxiliar_ciclos(novo_p, nova_pos, visitados);
+        }
+    }
+
+    visitados[pos]=Preto;
+}
 
 //METODOS USADOS NA FUNCIONALIDADE 13///////////////////////////////////////////////////////////
 
@@ -180,12 +224,12 @@ int Grafo::Profundidade()
         k++; // atualiza o indice do vertice que entrara na recursao
         aux = 0;
         Profundidade_recursao(vert_atual, k, visitado); // inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem do vector auxiliar em si
-        //cout << "Partindo de: " << vert_atual.predador.nome << "\n";
+        cout << "Partindo de: " << vert_atual.predador.nome << "\n";
 
         // quando a recursao de um vertice acaba, a contagem de vertices visitados ocorre na variavel aux, ja que o vetor auxiliar foi modificado na funcao anterior
         for (int i = 0; i < numero_de_vertices; i++)
         { // conta os vertices que visitou e reinicia o booleano de visita para as proximas iteracoes
-            //cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
+            cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
             aux += visitado[i].visitado;
             visitado[i].visitado = false;
         }
@@ -199,7 +243,7 @@ int Grafo::Profundidade()
 // funcao recursiva do processo
 // basicamente a recursao so vai parar quando todos os itens da "rede" que parte do vertice da iteracao forem visitados
 
-void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado)
+void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<vis> &visitado)
 {
     int i;
     visitado[x].visitado = true; // marca o vertice atual como visitado no vetor auxiliar
@@ -234,8 +278,7 @@ void Grafo::Profundidade_recursao(Predador vertice, int x, vector<vis> &visitado
 //caso nao exista um caminho entre o vertice inicial e o alvo o peso
 //no vetor D vale -1
 
-int Grafo::dijkstra(char n_predador[91], char n_presa[91])
-{
+int Grafo::dijkstra(char n_predador[91], char n_presa[91]) const {
 
     if (!strcmp(n_predador, n_presa)) // caso obvio
         return 0;

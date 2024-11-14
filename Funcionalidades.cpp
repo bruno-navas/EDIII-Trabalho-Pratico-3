@@ -1,18 +1,13 @@
 #include <iostream>
-using namespace std;
 #include "Funcionalidades.h"
 #include "FuncoesAuxiliares.h"
 #include "Classes_metodos_grafo.h"
+using namespace std;
 
-
-void Cria_grafo_e_exibe() { 
-
+void Cria_grafo_e_exibe() {
     Grafo g = Cria_grafo();
-
     g.exibe_grafo();
 }
-
-
 
 void Exibe_predadores() {
     Grafo g = Cria_grafo();
@@ -68,6 +63,17 @@ void Exibe_predadores() {
     }
 }
 
+void Identifica_ciclos() {
+    Grafo g = Cria_grafo();
+
+    if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
+    {
+        cout << ERRO_PADRAO;
+        return;
+    }
+
+    g.detecta_ciclos();
+}
 
 //FUNCIONALIDADE 13 - DFS
 
@@ -86,9 +92,8 @@ void Analisa_conexoes() {
         return;
     }
 
-    int componente;     
-    componente=g.Profundidade();    //chama a funcao de pesquisa em profundidade, necessaria para saber se um grafo eh ou nao eh fortemente conexo
-                                    //essa funcao retorna a qtd de componentes conexos do grafo
+    int componente = g.Profundidade();    //chama a funcao de pesquisa em profundidade, necessaria para saber se um grafo eh ou nao eh fortemente conexo
+                                          //essa funcao retorna a qtd de componentes conexos do grafo
 
     //se o numero de componentes conexos for igual ao nro de vertices o grafo eh fortemente conexo
     //assim partindo de qualquer vertice eh possivel chegar em todos os outros vertices do grafo
@@ -101,7 +106,6 @@ void Analisa_conexoes() {
         cout << "Nao, o grafo nao e fortemente conexo e possui " << componente << " componentes";
     
 }
-
 
 //FUNCIONALIDADE 14 - DIJKSTRA
 
@@ -139,7 +143,7 @@ void Relacao_presa_predador(){
 
         //ao fim da pesquisa atual checa se teve ou nao caminho e exibe o resultado
         cout << n_predador << " " << n_presa << ": ";
-        if(peso_caminho==__INT_MAX__)    
+        if(peso_caminho==INT_MAX)
             cout << "CAMINHO INEXISTENTE";
         else 
             cout << peso_caminho;
