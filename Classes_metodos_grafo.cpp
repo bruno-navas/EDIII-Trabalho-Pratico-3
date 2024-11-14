@@ -6,31 +6,7 @@
 #include "FuncoesAuxiliares.h"
 #include "funcoes_arqbin.h"
 #include "Classes_metodos_grafo.h"
-
 using namespace std;
-
-Presa::Presa(int populacao, string nome) {
-    populacao_do_predador = populacao;
-    nome_da_presa = std::move(nome);
-}
-
-ostream& operator<<(ostream &os, const Presa &presa) {
-    os << presa.nome_da_presa << " " << presa.populacao_do_predador << endl;
-    return os;
-}
-
-Predador::Predador(FILE* arquivo): predador(arquivo) {
-}
-
-void Predador::insere_presa(const Presa& p) {
-    presas.insert(p);
-}
-
-ostream& operator<<(ostream& out, const Predador& predador) {
-    out << predador.predador.nome << " " << predador.predador.especie << " " << predador.predador.habitat << " " << predador.predador.tipo << " " << predador.predador.dieta << " " << predador.predador.grau_entrada << " " << predador.predador.grau_saida << " " << predador.predador.grau << " ";
-
-    return out;
-}
 
 //CONSTRUTOR DO GRAFO DADO UM PONTEIRO PRA ARQUIVO, se tiver problema no inicio retorna o grafo com V=-1 para encerrar o programa
 Grafo::Grafo(FILE* arquivo) {
@@ -40,99 +16,103 @@ Grafo::Grafo(FILE* arquivo) {
         return;
     }
 
-    Cabecalho cabecalho(arquivo);
+    Cabecalho cabecalho(arquivo); // Chama o construtor de Cabecalho e armazena os dados em cabecalho
 
     if(cabecalho.status=='0'){      //se  arquivo estiver inconsistente
         numero_de_vertices=-1;
         return;
     }
 
+    // Inicializa as variáveis de contagem com 0
     numero_de_vertices = numero_de_ciclos = 0;
 
+    // Pula o "lixo" do arquivo binario
     fseek(arquivo, 1600, SEEK_SET);
 
+    // Loop para a leitura de todos os predadores do arquivo
     for (int i = 0; i < cabecalho.proxRRN; i++) {
 
         // Lê o predador do arquivo binário
         Predador p(arquivo);
 
-        // Lê a presa do arquivo binário
-        //fseek(arquivo, 1600 + (160 * i), SEEK_SET); // Reposiciona para ler a presa
+        // Lê a presa do arquivo binário (os dados da presa já estão armazenados no Predador p para evitar leitura dupla do arquivo)
         Presa pr(p.predador.populacao, p.predador.presa);
 
         if(pr.populacao_do_predador==-1) {
             continue;
-        }
+        } // Predador inconsistente
 
-        // Tenta inserir o predador no conjunto
+        // Procura o predador em vertices
         auto it_predador = vertices.find(p);
 
+        // Se p estiver em vertices, it_predador vai apontar para sua posição
         if (it_predador!=vertices.end()) {
-            Predador aux_predador = *it_predador;
-            aux_predador.predador.grau_saida++;
-            aux_predador.predador.grau++;
-            aux_predador.insere_presa(pr);
+            Predador aux_predador = *it_predador; // Copiamos seus dados para um auxiliar
+            aux_predador.predador.grau_saida++; // Aumentamos seu grau de saída
+            aux_predador.predador.grau++; // Aumentamos seu grau
+            aux_predador.insere_presa(pr); // Inserimos a nova presa
 
-            vertices.erase(*it_predador);
-            vertices.insert(aux_predador);
+            // Como os sets são imutáveis, precisamos reinserir o predador com a nova presa e apagar o antigo
+
+            vertices.erase(*it_predador); // Apagamos o predador antigo
+            vertices.insert(aux_predador); // Adicionamos o novo
         }
+        // Adicionamos a presa lida ao predador e então, adicionamos o predador aos vertices
         else {
             p.insere_presa(pr);
             vertices.insert(p);
-            numero_de_vertices++;
+            numero_de_vertices++; // Temos um novo vértice
         }
     }
 
-    fseek(arquivo, 1600, SEEK_SET);
+    int n_presas = 1;
 
-    for (int i=0; i < cabecalho.proxRRN; i++) {
+    // Loops para a definição do grau de entrada dos vértices
+    for (auto x : vertices) {
+        for (auto y : x.presas) {
+             Predador busca_presa = x; // Predador auxiliar recebe os dados do Predador atual
+             //cout << busca_presa << endl;
+             // Como a busca em vertices se dá pelo nome do Predador, precisamos trocá-lo
+             busca_presa.predador.nome = y.nome_da_presa; // Auxiliar recebe o nome da presa atual
 
-        // Lê o predador do arquivo binário
-        Predador p(arquivo);
+             // Procura a presa em vértices (a presa também é predadora)
+             auto it_presa = vertices.find(busca_presa);
 
-        // Lê a presa do arquivo binário
-        Presa pr(p.predador.populacao, p.predador.presa);
+             // Se a presa estiver em vertices, it_presa recebe sua posição
+             if(it_presa!=vertices.end()) {
+                 Predador aux_presa = *it_presa; // Copiamos seus dados para um auxiliar
+                 aux_presa.predador.grau_entrada++; // Aumentamos seu grau de entrada
+                 aux_presa.predador.grau++; // Aumentamos seu grau
 
-        if(pr.populacao_do_predador==-1) {
-            continue;
-        }
-
-        Predador busca_presa = p;
-        busca_presa.predador.nome = busca_presa.predador.presa;
-
-        auto it_presa = vertices.find(busca_presa);
-
-        if(it_presa!=vertices.end()) {
-            Predador aux_presa = *it_presa;
-            aux_presa.predador.grau_entrada++;
-            aux_presa.predador.grau++;
-
-            vertices.erase(*it_presa);
-            vertices.insert(aux_presa);
+                 vertices.erase(*it_presa); // Apagamos o predador antigo
+                 vertices.insert(aux_presa); // Adicionamos o novo
+            }
         }
     }
 }
 
+
 //METODOS USADOS NA FUNCAO 10///////////////////////////////////////////////////////////////////////
 
-//metodo que chama o construtor do grafo com um ponteiro de arquivo binario inicializado de acordo com o nome dado
+// Metodo que chama o construtor do grafo com um ponteiro de arquivo binario inicializado de acordo com o nome dado
 Grafo Cria_grafo() {
     string nome;
     cin >> nome;
 
     FILE *arq_bin = fopen(nome.c_str(), "rb");
 
-    return Grafo (arq_bin);
+    return Grafo(arq_bin);
 }
 
 void Grafo::exibe_grafo() const {
 
-    if(numero_de_vertices==-1)
+    if(numero_de_vertices==0)
     {
         cout << ERRO_PADRAO;
         return;
-    }
+    } // Grafo vazio
 
+    // Loops que percorem todos os Predadores e todas as suas Presas, exibindo seus dados
     for (const auto& x: vertices) {
         for (const auto& y: x.presas) {
             cout << x << y;
@@ -140,19 +120,48 @@ void Grafo::exibe_grafo() const {
     }
 }
 
-//A FUNCIONALIDADE 11 NAO USA NENHUM METODO DA CLASSE DO GRAFO, APENAS OS DADOS DELE////////////
+
+//METODOS USADOS NA FUNCAO 11///////////////////////////////////////////////////////////////////////
+
+void Grafo::busca_predadores(char presa[]) const {
+    // Armazena o resultado
+    string saida;
+
+    // Percorre todos os Predadores e suas Presas
+    for(const auto& x:vertices) {
+        for(const auto& y:x.presas) {
+            // Se encontrar a presa buscada nas Presas do Predador, adiciona o nome do Predador à resposta
+            if (y.nome_da_presa==presa) {
+                saida += x.predador.nome + ", ";
+            }
+        }
+    }
+
+    // Se a saída não for vazia, exibe o novo da presa e de todos os seus predadores
+    if(!saida.empty()) {
+        saida.erase(saida.size()-2,2); // Remove as partes desnecessárias da resposta
+        cout << presa << ": " << saida<<endl << endl;
+    }
+    else {
+        cout << ERRO_REGISTRO << endl;
+    }
+}
+
 
 //METODOS USADOS NA FUNCIONALIDADE 12/////////////////////////////////////////////////////////////
 
-int Branco = 0;
-int Cinza = 1;
-int Preto = 2;
+// Variáveis globais para maior abstração do código
+int Branco = 0; // Predador não visitado
+int Cinza = 1;  // Predador visitado
+int Preto = 2;  // Predador fora da pilha
 
 void Grafo::detecta_ciclos()  {
 
+    // Vetor de inteiros que armazena o status de cada um dos Predadores
     vector<int> visitados(numero_de_vertices);
     int pos = 0;
 
+    // Percorremos todos os predadores e se seu status for Branco, chamamos o metodo auxiliar
     for (const auto& x: vertices) {
         if (visitados[pos]==Branco) {
             auxiliar_ciclos(x, pos, visitados);
@@ -164,29 +173,36 @@ void Grafo::detecta_ciclos()  {
 }
 
 void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) {
+    // Se o Predador já foi visitado, temos um ciclo
     if (visitados[pos]==Cinza) {
         numero_de_ciclos++;
-        visitados[pos]=Preto;
+        return;
     }
+    // Se o Predador está fora da pilha, já exploramos todos os seus caminhos
     if (visitados[pos]==Preto) {
         return;
     }
 
+    // Indicamos que o Predador atual já foi visitado
     visitados[pos]=Cinza;
 
+    // Percorremos todas as Presas do Predador atual
     for (const auto& x: p.presas) {
-        Predador novo_p = p;
-        novo_p.predador.nome = x.nome_da_presa;
+        Predador novo_p = p; // Auxiliar recebe os dados do Predador atual
+        novo_p.predador.nome = x.nome_da_presa; // Trocamos seu nome pelo nome da Presa atual para a busca em vertices
 
+        // Se a Presa atual estiver em vertices (também é predadora), chamamos o metodo auxiliar para ela
         if (auto it_presa = vertices.find(novo_p); it_presa!=vertices.end()) {
-            novo_p = *it_presa;
-            const int nova_pos = static_cast<int>(distance(vertices.begin(), it_presa));
+            novo_p = *it_presa; // Atualizamos o auxiliar com os dados da posição em que encontramos a Presa em vertices
+            const int nova_pos = static_cast<int>(distance(vertices.begin(), it_presa)); // Calculamos a nova_pos pela distância de it_presa e o inicio de vertices
             auxiliar_ciclos(novo_p, nova_pos, visitados);
         }
     }
 
+    // Alteramos o status do Predador para indicar que já visitamos todos os seus caminhos
     visitados[pos]=Preto;
 }
+
 
 //METODOS USADOS NA FUNCIONALIDADE 13///////////////////////////////////////////////////////////
 
@@ -269,6 +285,7 @@ void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<v
         }
     }
 }
+
 
 //METODO USADO NA FUNCIONALIDADE 14////////////////////////////////////////////////////////////////
 

@@ -4,13 +4,18 @@
 #include "Classes_metodos_grafo.h"
 using namespace std;
 
+//FUNCIONALIDADE 10
+// Essa função cria um grafo a partir de um arquivo binário e exibe todas as suas presas e predadores
 void Cria_grafo_e_exibe() {
-    Grafo g = Cria_grafo();
-    g.exibe_grafo();
+    Grafo g = Cria_grafo(); // Cria grafo
+    g.exibe_grafo(); // Exibe
 }
 
+//FUNCIONALIDADE 11
+// Essa função recebe um determinado número de nomes de presas e procura por seus predadores no grafo
+// Caso a presa selecionado possua predadores, exibe seus nomes
 void Exibe_predadores() {
-    Grafo g = Cria_grafo();
+    Grafo g = Cria_grafo(); // Cria o grafo
 
     if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
     {
@@ -18,53 +23,21 @@ void Exibe_predadores() {
         return;
     }
 
-    int numero_de_buscas = 3;
-    cin >> numero_de_buscas;
+    int numero_de_buscas;
+    cin >> numero_de_buscas; // Recebe o número de presas a serem procuradas
 
-    fflush(stdin);
-
-    string input;
-    string busca_atual;
-    vector<string> busca;
-    bool dentro_aspas = false;
-
-    getline(cin, input);
-
-    for (const char c : input) {
-        if (c == '"') {
-            if (dentro_aspas) {
-                busca.push_back(busca_atual);
-                busca_atual.clear();
-            }
-            dentro_aspas = !dentro_aspas;
-        }
-        else if (dentro_aspas) {
-            busca_atual += c;
-        }
-    }
-
-    for(int i=0; i<numero_de_buscas; i++) {
-        string saida;
-
-        for(const auto& x:g.vertices) {
-            for(const auto& y:x.presas) {
-                if (y.nome_da_presa==busca[i]) {
-                    saida += x.predador.nome + ", ";
-                }
-            }
-        }
-        if(!saida.empty()) {
-            saida.erase(saida.size()-2,2);
-            cout << busca[i] << ": " << saida<<endl << endl;
-        }
-        else {
-            cout << ERRO_REGISTRO << endl;
-        }
+    // Chama a função scan_quote_string para cada presa
+    for (int i = 0; i < numero_de_buscas; i++) {
+        char presa[90];
+        scan_quote_string(presa); // Separa as presas e remove as aspas
+        g.busca_predadores(presa); // Chama o metodo correspondente
     }
 }
 
+//FUNCIONALIDADE 12 - DFS
+// Essa função identifica todos os ciclos presentes em um grafo e exibe o número total
 void Identifica_ciclos() {
-    Grafo g = Cria_grafo();
+    Grafo g = Cria_grafo(); // Cria o grafo
 
     if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
     {
@@ -72,7 +45,7 @@ void Identifica_ciclos() {
         return;
     }
 
-    g.detecta_ciclos();
+    g.detecta_ciclos(); // Chama o metodo correspondente
 }
 
 //FUNCIONALIDADE 13 - DFS

@@ -23,12 +23,16 @@ Dado_bin::Dado_bin(FILE *arquivo) {
 
 }
 
+//Construtor da classe Especie
 Especie::Especie(FILE* arquivo) {
-    Dado_bin auxiliar(arquivo);
-    char *lin = strdup(auxiliar.variavel);
+    Dado_bin auxiliar(arquivo); // Le os dados do arquivo bin com o uso do construtor de Dado_bin
+
+    // Separa as informações recebidas ans varíáveis da classe
+    char *lin = strdup(auxiliar.variavel); // Auxiliar
 
     populacao = auxiliar.populacao;
 
+    // transfere os dados de auxiliar para as varíáveis com strsep e delimitador '#"
     nome = strsep(&lin, "#");
     especie = strsep(&lin, "#");
     habitat = strsep(&lin, "#");
@@ -37,6 +41,6 @@ Especie::Especie(FILE* arquivo) {
     presa = strsep(&lin, "#");
 
     grau_entrada = 0;
-    grau_saida = 1;
+    grau_saida = 1; // Se o vértice foi criado, ele possui ao menos uma presa
     grau = 1;
 }
