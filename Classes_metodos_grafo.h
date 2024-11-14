@@ -50,17 +50,23 @@ public:
 class Grafo {
 private:
     int numero_de_vertices;
+    int numero_de_ciclos;
     set<Predador> vertices;
-    
+
     typedef struct{     //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
-    bool visitado;
-    string nome;
+        bool visitado;
+        string nome;
 
     }vis;
 
+    typedef struct {
+        int cor;
+        string nome;
+    }cores;
+
     typedef struct{     //variavel auxiliar para fazer a pesquisa com o algoritmo de dijkstra, armazena o nome da especie e o peso do caminho
-    int peso;
-    string nome;
+        int peso;
+        string nome;
 
     }dij;
 
@@ -69,7 +75,7 @@ private:
 
     //METODOS DA FUNCIONALIDADE 12
     void detecta_ciclos();
-    bool auxiliar_ciclos(int node, int cor[]);
+    void auxiliar_ciclos(const Predador& p, int pos, vector<cores>& visitados);
 
     //METODOS DA FUNCIONALIDADE 13
     int Profundidade();

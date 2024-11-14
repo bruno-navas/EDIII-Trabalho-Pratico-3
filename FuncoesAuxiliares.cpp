@@ -1,7 +1,6 @@
 #include "FuncoesAuxiliares.h"
 #include "Funcionalidades.h"
 #include <iostream>
-#include <string>
 #include <cstring>
 
 using namespace std;

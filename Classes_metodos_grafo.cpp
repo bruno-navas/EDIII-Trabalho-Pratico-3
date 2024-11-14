@@ -10,7 +10,7 @@
 using namespace std;
 
 Presa::Presa(int populacao, string nome) {
-    populacao_do_predador = populacao;;
+    populacao_do_predador = populacao;
     nome_da_presa = std::move(nome);
 }
 
@@ -47,7 +47,7 @@ Grafo::Grafo(FILE* arquivo) {
         return;
     }
 
-    numero_de_vertices = 0;
+    numero_de_vertices = numero_de_ciclos = 0;
 
     fseek(arquivo, 1600, SEEK_SET);
 
@@ -148,46 +148,48 @@ int Branco = 0;
 int Cinza = 1;
 int Preto = 2;
 
-void Grafo::detecta_ciclos() {
-    int cor[numero_de_vertices+1];
-    bool ciclo = false;
+void Grafo::detecta_ciclos()  {
 
-    for (int i=0; i<numero_de_vertices; i++) {
-        if (cor[i]==Branco) {
-            ciclo |= auxiliar_ciclos(i, cor);
-        }
+    vector<cores> visitados(numero_de_vertices);
+    int pos = 0;
+
+    for (const auto& x: vertices) {
+        visitados.push_back({0, x.predador.nome});
     }
+
+    for (const auto& x: vertices) {
+        if (visitados[pos].cor==Branco) {
+            auxiliar_ciclos(x, pos, visitados);
+        }
+        pos++;
+    }
+
+    cout << "Quantidade de ciclos: " << numero_de_ciclos << endl;
 }
 
-bool Grafo::auxiliar_ciclos(int node, int cor[]) {
-    // esse vértice está na pilha, há um ciclo.
-    if(cor[node] == Cinza){
-        return true;
+void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<cores>& visitados) {
+    if (visitados[pos].cor==Cinza) {
+        numero_de_ciclos++;
+        visitados[pos].cor=Preto;
     }
-    // já chamamos essa função pra esse vértice, não precisamos
-    // chamar novamente(se houver um ciclo, já foi levado em conta)
-    if(cor[node] == Preto){
-        return false;
+    if (visitados[pos].cor==Preto) {
+        return;
     }
 
-    bool b = false;
+    visitados[pos].cor=Cinza;
 
-    cor[node] = Cinza;
+    for (const auto& x: p.presas) {
+        Predador novo_p = p;
+        novo_p.predador.nome = x.nome_da_presa;
 
-    auto it = vertices.begin();
-    advance(it, node);
-    const Predador& predador = *it;
-
-    int v = 0;
-    // este vértice está na pilha agora
-    for(auto presa: predador.presas){
-        b |= auxiliar_ciclos(v, cor); // basta que uma instância do dfs detecte ciclo para
-        // que esse 'true' se propague pela pilha toda.
-        v++;
+        if (auto it_presa = vertices.find(novo_p); it_presa!=vertices.end()) {
+            novo_p = *it_presa;
+            const int nova_pos = static_cast<int>(distance(vertices.begin(), it_presa));
+            auxiliar_ciclos(novo_p, nova_pos, visitados);
+        }
     }
-    cor[node] = Preto;
-    // este vértice saiu da pilha
-    return b;
+
+    visitados[pos].cor=Preto;
 }
 
 //METODOS USADOS NA FUNCIONALIDADE 13///////////////////////////////////////////////////////////
