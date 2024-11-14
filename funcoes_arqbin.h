@@ -32,7 +32,7 @@ private:
     //  Nome-Especie-Habitat-Tipo-Dieta-Alimento
     //  Cada campo variavel eh separado por um delimitador '#'
     //  As strings nao devem terminar com \0
-    //  Se sobrar espaço preencher com '$'
+
 public:
     explicit Dado_bin(FILE* arquivo);
     friend class Especie;
@@ -47,14 +47,14 @@ public:
     string dieta;
     string tipo;
     string presa;
-    int populacao;
-    int grau_entrada;
-    int grau_saida;
-    int grau;
+    int populacao; // Do predador
+    int grau_entrada; // Indica o número de predadores que predam o vértice
+    int grau_saida; // Indica o número de presas no vértice
+    int grau; // Soma dos graus de saída e de entrada
 
     explicit Especie(FILE* arquivo);
-    friend class Predador;
-    friend class Grafo;
+    //friend class Predador;
+    //friend class Grafo;
 };
 
 #endif //FUNCOES_ARQBIN_H

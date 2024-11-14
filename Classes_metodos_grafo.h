@@ -4,69 +4,35 @@
 #include <iostream>
 #include <set>
 #include <vector>
-
+#include "Classes_metodos_presa_e_predador.h"
 #include "funcoes_arqbin.h"     //manipulacoes no arquivo binario
 
 using namespace std;
 
-class Presa{
-public:
-    string nome_da_presa;
-    int populacao_do_predador;
-
-    explicit Presa(int populacao, string nome);
-    bool operator<(const Presa& e) const {
-        return this->nome_da_presa < e.nome_da_presa;
-    }
-    friend ostream& operator<<(ostream& os, const Presa& e);
-};
-
-class Predador {
-private:
-    Especie predador;
-    set<Presa> presas;
-
-public:
-    explicit Predador(FILE* arquivo);
-    void insere_presa(const Presa& p);
-
-    bool operator<(const Predador& e) const {
-        return this->predador.nome < e.predador.nome;
-    }
-    bool operator==(const Predador& outro) const {
-        if (this->predador.nome == outro.predador.nome) {
-            return true;
-        }
-        return false;
-    }
-
-    friend ostream& operator<<(ostream& out, const Predador& predador);
-    friend class Grafo;
-    friend class Presa;
-    void friend Exibe_predadores();
-    void friend Analisa_conexoes();
-};
 
 class Grafo {
 private:
     int numero_de_vertices;
     int numero_de_ciclos;
     set<Predador> vertices;
+    
+    typedef struct{
+    bool visitado;
+    string nome;
 
-    typedef struct{     //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
-        bool visitado;
-        string nome;
+    }vis; //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
 
-    }vis;
+    typedef struct{
+    int peso;
+    string nome;
 
-    typedef struct{     //variavel auxiliar para fazer a pesquisa com o algoritmo de dijkstra, armazena o nome da especie e o peso do caminho
-        int peso;
-        string nome;
-
-    }dij;
+    }dij; //variavel auxiliar para fazer a pesquisa com o algoritmo de dijkstra, armazena o nome da especie e o peso do caminho
 
     //METODO DE EXIBICAO DA FUNCIONALIDADE 10
     void exibe_grafo() const;
+
+    //METODO DA FUNCIONALIDADE 11
+    void busca_predadores(char presa[]) const;
 
     //METODOS DA FUNCIONALIDADE 12
     void detecta_ciclos();
@@ -77,7 +43,7 @@ private:
     void Profundidade_recursao(const Predador& vertice, int x,vector<vis> &visitado);
 
     //METODO DA FUNCIONALIDADE 14
-    int dijkstra(string n_predador,string n_presa) const;
+    int dijkstra(string n_predador, string n_presa) const;
     
 public:
     explicit Grafo(FILE* arquivo);

@@ -2,11 +2,10 @@
 #include "Funcionalidades.h"
 #include <iostream>
 #include <cstring>
-#include <ctype.h>
-#include <algorithm>
 
 using namespace std;
 
+// Seleciona qual das funcionalidades desenvolvidas ao longo do trabalho será executada
 void Seletor_de_funcionalidade (int selecao) {
     switch (selecao) {
         case 10:
@@ -33,44 +32,33 @@ void Seletor_de_funcionalidade (int selecao) {
             break;
     }
 }
-void scan_quote_string(char *str) {
 
-	/*
-	*	Use essa função para ler um campo string delimitado entre aspas (").
-	*	Chame ela na hora que for ler tal campo. Por exemplo:
-	*
-	*	A entrada está da seguinte forma:
-	*		nomeDoCampo "MARIA DA SILVA"
-	*
-	*	Para ler isso para as strings já alocadas str1 e str2 do seu programa, você faz:
-	*		scanf("%s", str1); // Vai salvar nomeDoCampo em str1
-	*		scan_quote_string(str2); // Vai salvar MARIA DA SILVA em str2 (sem as aspas)
-	*
-	*/
+void scan_quote_string(char *str) {
 
 	char R;
 
-	while((R = getchar()) != EOF && isspace(R)); // ignorar espaços, \r, \n...
+	while((R = getchar()) != EOF && isspace(R));
+	    // ignorar espaços, \r, \n...
 
-	if(R == 'N' || R == 'n') { // campo NULO
-		getchar(); getchar(); getchar(); // ignorar o "ULO" de NULO.
-		strcpy(str, ""); // copia string vazia
-	} else if(R == '\"') {
-		if(scanf("%[^\"]", str) != 1) { // ler até o fechamento das aspas
-			strcpy(str, "");
-		}
-		getchar(); // ignorar aspas fechando
-	} else if(R != EOF){ // vc tá tentando ler uma string que não tá entre aspas! Fazer leitura normal %s então, pois deve ser algum inteiro ou algo assim...
-		str[0] = R;
-		scanf("%s", &str[1]);
-	} else { // EOF
-		strcpy(str, "");
-	}
+    if(R == 'N' || R == 'n') { // campo NULO
+        getchar(); getchar(); getchar(); // ignorar o "ULO" de NULO.
+        strcpy(str, ""); // copia string vazia
+    } else if(R == '\"') {
+        if(scanf("%[^\"]", str) != 1) { // ler até o fechamento das aspas
+            strcpy(str, "");
+        }
+        getchar(); // ignorar aspas fechando
+	    }
+    else if(R != EOF){ // vc tá tentando ler uma string que não tá entre aspas! Fazer leitura normal %s então, pois deve ser algum inteiro ou algo assim...
+        str[0] = R;
+        scanf("%s", &str[1]);
+	    }
+    else { // EOF
+        strcpy(str, "");
+    }
 }
-
-
-//strsep para uso em sistemas windows 
 /*
+//strsep para uso em sistemas windows 
 char* strsep(char** stringp, const char* delim)
 {
     char* start = *stringp;
@@ -89,6 +77,6 @@ char* strsep(char** stringp, const char* delim)
 
     return start;
 }
-
-
 */
+
+
