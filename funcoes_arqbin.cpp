@@ -1,6 +1,4 @@
 #include "funcoes_arqbin.h"
-#include "funcoesAuxiliares.h"
-
 //le o cabecalho do arquivo de dados
 Cabecalho::Cabecalho(FILE* arquivo) {
     fread(&status, 1, 1, arquivo);                 // Lê 1 byte para 'status'

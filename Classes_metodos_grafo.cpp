@@ -144,11 +144,9 @@ void Grafo::exibe_grafo() const {
 
 //METODOS USADOS NA FUNCIONALIDADE 12/////////////////////////////////////////////////////////////
 
-int Branco = 0;
-int Cinza = 1;
-int Preto = 2;
-
 void Grafo::detecta_ciclos()  {
+
+    int Branco = 0;
 
     vector<int> visitados(numero_de_vertices);
     int pos = 0;
@@ -164,6 +162,10 @@ void Grafo::detecta_ciclos()  {
 }
 
 void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) {
+
+    int Branco = 0;
+    int Cinza = 1;
+    int Preto = 2;
     if (visitados[pos]==Cinza) {
         numero_de_ciclos++;
         visitados[pos]=Preto;
@@ -224,12 +226,10 @@ int Grafo::Profundidade()
         k++; // atualiza o indice do vertice que entrara na recursao
         aux = 0;
         Profundidade_recursao(vert_atual, k, visitado); // inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem do vector auxiliar em si
-        cout << "Partindo de: " << vert_atual.predador.nome << "\n";
 
         // quando a recursao de um vertice acaba, a contagem de vertices visitados ocorre na variavel aux, ja que o vetor auxiliar foi modificado na funcao anterior
         for (int i = 0; i < numero_de_vertices; i++)
         { // conta os vertices que visitou e reinicia o booleano de visita para as proximas iteracoes
-            cout << visitado[i].visitado << " " << visitado[i].nome << "\n";
             aux += visitado[i].visitado;
             visitado[i].visitado = false;
         }
@@ -280,8 +280,22 @@ void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<v
 
 int Grafo::dijkstra(char n_predador[91], char n_presa[91]) const {
 
+    bool vert_1=false,vert_2=false;     //checa se ambos os membros fazem parte da lista de vertices
+    for(const auto &x : vertices)
+    {
+        if(x.predador.nome==n_predador)
+            vert_1=true;
+        if(x.predador.nome==n_presa)
+            vert_2=true;
+        if(vert_1 && vert_2)    //se os dois fizerem parte sai do loop
+            break;
+    }    
+
+    if(!vert_1 || !vert_2)  //se um dos dois nao estiver na lista de vertices n tem caminho
+        return __INT_MAX__;
+
     if (!strcmp(n_predador, n_presa)) // caso obvio
-        return 0;
+        return __INT_MAX__;
 
     int i, v, u;
     int peso = 0;

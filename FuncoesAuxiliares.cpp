@@ -57,6 +57,7 @@ void scan_quote_string(char *str) {
 }
 
 //strsep para uso em sistemas windows 
+/*
 char* strsep(char** stringp, const char* delim)
 {
     char* start = *stringp;
@@ -77,4 +78,4 @@ char* strsep(char** stringp, const char* delim)
 }
 
 
-
+*/
