@@ -59,11 +59,6 @@ private:
 
     }vis;
 
-    typedef struct {
-        int cor;
-        string nome;
-    }cores;
-
     typedef struct{     //variavel auxiliar para fazer a pesquisa com o algoritmo de dijkstra, armazena o nome da especie e o peso do caminho
         int peso;
         string nome;
@@ -75,7 +70,7 @@ private:
 
     //METODOS DA FUNCIONALIDADE 12
     void detecta_ciclos();
-    void auxiliar_ciclos(const Predador& p, int pos, vector<cores>& visitados);
+    void auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados);
 
     //METODOS DA FUNCIONALIDADE 13
     int Profundidade();

@@ -150,15 +150,11 @@ int Preto = 2;
 
 void Grafo::detecta_ciclos()  {
 
-    vector<cores> visitados(numero_de_vertices);
+    vector<int> visitados(numero_de_vertices);
     int pos = 0;
 
     for (const auto& x: vertices) {
-        visitados.push_back({0, x.predador.nome});
-    }
-
-    for (const auto& x: vertices) {
-        if (visitados[pos].cor==Branco) {
+        if (visitados[pos]==Branco) {
             auxiliar_ciclos(x, pos, visitados);
         }
         pos++;
@@ -167,16 +163,16 @@ void Grafo::detecta_ciclos()  {
     cout << "Quantidade de ciclos: " << numero_de_ciclos << endl;
 }
 
-void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<cores>& visitados) {
-    if (visitados[pos].cor==Cinza) {
+void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) {
+    if (visitados[pos]==Cinza) {
         numero_de_ciclos++;
-        visitados[pos].cor=Preto;
+        visitados[pos]=Preto;
     }
-    if (visitados[pos].cor==Preto) {
+    if (visitados[pos]==Preto) {
         return;
     }
 
-    visitados[pos].cor=Cinza;
+    visitados[pos]=Cinza;
 
     for (const auto& x: p.presas) {
         Predador novo_p = p;
@@ -189,7 +185,7 @@ void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<cores>& visitados
         }
     }
 
-    visitados[pos].cor=Preto;
+    visitados[pos]=Preto;
 }
 
 //METODOS USADOS NA FUNCIONALIDADE 13///////////////////////////////////////////////////////////
