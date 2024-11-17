@@ -4,6 +4,7 @@
 #include <iostream>
 #include <set>
 #include <vector>
+#include <stack>
 #include "Classes_metodos_presa_e_predador.h"
 #include "funcoes_arqbin.h"     //manipulacoes no arquivo binario
 
@@ -17,8 +18,10 @@ private:
     set<Predador> vertices;
     
     typedef struct{
-    bool visitado;
     string nome;
+    int low;
+    int disc;
+    bool stack;
 
     }vis; //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
 
@@ -40,7 +43,7 @@ private:
 
     //METODOS DA FUNCIONALIDADE 13
     int Profundidade();
-    void Profundidade_recursao(const Predador& vertice, int x,vector<vis> &visitado);
+    void Profundidade_recursao(const Predador& vertice, int x,vector<vis> &visitado,stack<int> &pilha,int &comp);
 
     //METODO DA FUNCIONALIDADE 14
     int dijkstra(string n_predador, string n_presa) const;

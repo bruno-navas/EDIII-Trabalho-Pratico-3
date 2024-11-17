@@ -22,6 +22,9 @@ ostream& operator<<(ostream &os, const Presa &presa) {
 Predador::Predador(FILE* arquivo): predador(arquivo) {
 }
 
+Predador::Predador(string NOME): predador(NOME) {
+}
+
 // Metodo auxiliar para inserir presas novas nos sets de Presa do Predador
 void Predador::insere_presa(const Presa& p) {
     presas.insert(p);

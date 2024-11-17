@@ -53,6 +53,7 @@ public:
     int grau; // Soma dos graus de saída e de entrada
 
     explicit Especie(FILE* arquivo);
+    explicit Especie(string NOME);
     //friend class Predador;
     //friend class Grafo;
 };

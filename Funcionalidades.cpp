@@ -61,6 +61,8 @@ void Identifica_ciclos() {
 void Analisa_conexoes() {
     Grafo g = Cria_grafo();      //cria o grafo
 
+    
+
     if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo, da erro e nao executa a funcao
     {
         cout << ERRO_PADRAO;
@@ -75,7 +77,7 @@ void Analisa_conexoes() {
 
     //caso isso nao seja verdade ele nao eh fortemente conexo, mas ainda sim podem ter vertices que tenham a capacidade
     //de chegar em todos os outros vertices do grafo, so nao sao todos
-    if(componente==g.numero_de_vertices)
+    if(componente==1)
         cout << "Sim, o grafo é fortemente conexo e possui 1 componente.";
     else
         cout << "Não, o grafo não é fortemente conexo e possui " << componente << " componentes.";

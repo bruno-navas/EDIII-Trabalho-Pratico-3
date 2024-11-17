@@ -25,6 +25,7 @@ private:
 
 public:
     explicit Predador(FILE* arquivo);
+    explicit Predador(string NOME);
     void insere_presa(const Presa& p);
 
     bool operator<(const Predador& e) const {

@@ -44,3 +44,17 @@ Especie::Especie(FILE* arquivo) {
     grau_saida = 1; // Se o vértice foi criado, ele possui ao menos uma presa
     grau = 1;
 }
+
+Especie::Especie(string NOME) {
+
+    populacao=0;
+    nome = NOME;
+    especie = "NA";
+    habitat = "NA";
+    dieta = "NA";
+    tipo = "NA";
+    presa = "NA";
+    grau_entrada = 0;
+    grau_saida = 0;
+    grau = 0;
+}
