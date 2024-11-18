@@ -216,38 +216,30 @@ void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) 
 //vale ressaltar que para a funcao funcioar devidamente foi preciso acescentar os vertices
 // de alimentos que aida ao estivessem nos vertices, como "sunlight"
 
+//pagina encontrada que ajudou a construir o codigo
 //https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/
 
 int Grafo::Profundidade()
 {  
     int componentes = 0; // nro de componentes conexos
-    int aux;             // auxiliar para checar se um componente eh conexo
-    int k;               // indice do vertice que entrara na recursao
-
-    vector<vis> visitado; // vetor auxiliar
-    vis temp;             // vetor auxiliar
-    stack<int> pilha;     //pilha que sera usada no processo de recursao
+    map<string,vis> visit;//map, auxiliar que indexa as informacoes com o nome das especies
+    vis temp;             //auxiliar
+    stack<string> pilha;  //pilha que sera usada no processo de recursao
 
     // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os vertices sao considerados nao visitados incialmente
     // e tambem eh destacado o nome da especie
     temp.low = -1;
     temp.disc=-1;
     temp.stack=false;
-    for (const auto &x : vertices)
-    {
-        temp.nome = x.predador.nome;
-        visitado.push_back(temp);
-    }
-
-    k = -1; // inicializa o valor referente ao indice de cada vertice original do vector auxiliar
-            //  chama a funcao recursiva para cada um dos vertices do grafo dentro do loop
-    for (const auto &vert_atual : vertices)
-    {
-        k++; // atualiza o indice do vertice que entrara na recursao
-        if(visitado[k].disc==-1)
-            Profundidade_recursao(vert_atual, k, visitado,pilha,componentes); // inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem do vector auxiliar em si
+    for (const auto &x : vertices)      //inicializa o map auxiliar
+        visit[x.predador.nome]=temp;
     
-    }
+
+    //  chama a funcao recursiva para cada um dos vertices do grafo dentro do loop
+    for (const auto &vert_atual : vertices)
+        if(visit[vert_atual.predador.nome].disc==-1)    //so faz a visita se nao tiver sido visitado
+            Profundidade_recursao(vert_atual, visit,pilha,componentes); // inicia a recursao pelo vertice atual do loop e coloca o indice inicial do vetor de visitados, alem do vector auxiliar em si
+    
 
     return componentes; // a qtd de componentes eh alterada dentro da funcao recursiva
 }
@@ -255,44 +247,40 @@ int Grafo::Profundidade()
 //parte recursiva do processo
 static int tempo = 0;   //variavel global para abstacao do codigo
 
-void Grafo::Profundidade_recursao(const Predador &vertice, const int x, vector<vis> &visitado, stack<int> &pilha, int &comp)
+void Grafo::Profundidade_recursao(const Predador &vertice, map<string,vis> &visitado, stack<string> &pilha, int &comp)
 {
+    string atual=vertice.predador.nome; //armazena o nome do vertice, ajuda na leitura do codigo
 
-    visitado[x].low = visitado[x].disc = ++tempo; // a variavel global tempo ajuda na abstracao do codigo e significa quantos passos
-    visitado[x].stack = true;                     // foram precisos para chegar no vertice "x" dentro do algoritmo
-    pilha.push(x);                                // coloca o vertice na pilha
+    visitado[atual].low = visitado[atual].disc = ++tempo;   // a variavel global tempo ajuda na abstracao do codigo e significa quantos passos
+    visitado[atual].stack = true;                           // foram precisos para chegar no vertice "atual" dentro do algoritmo
+    pilha.push(atual);                                      // coloca o vertice na pilha
 
-    int i;
     for (const auto &presas_vertice : vertice.presas) // passa pela lista de presas do predador atual
     {
         auto &lista_predador = *vertices.find(Predador(presas_vertice.nome_da_presa));
         // eh nesse find q estao os predadores (com nome na lista de presas) que serao enviados para recursao novamente (ou nao)
+        string prox = lista_predador.predador.nome;
 
-        for (i = 0; i < numero_de_vertices; i++)                  // pega o indice do predador/presa na lista auxiliar
-            if (visitado[i].nome == lista_predador.predador.nome) // nao eh tao eficiente mas foi a forma pensada para indexar o <set>
-                break;
-
-        if (visitado[i].disc == -1)
-        {                                                                    // se esse vertice ainda nao foi visitado, chamada recursiva
-            Profundidade_recursao(lista_predador, i, visitado, pilha, comp); // funcao recebe o vertice que ainda nao foi visitado, a lista auxiliar e o indice referente
-            visitado[x].low = min(visitado[x].low, visitado[i].low);         // escolhe o menor camiho enntre o atual e o que veio da recursao
+        if (visitado[prox].disc == -1)
+        {                                                                       // se esse vertice ainda nao foi visitado, chamada recursiva
+            Profundidade_recursao(lista_predador, visitado, pilha, comp);       // funcao recebe o vertice que ainda nao foi visitado, a lista auxiliar e o indice referente
+            visitado[atual].low = min(visitado[atual].low, visitado[prox].low); // escolhe o menor camiho enntre o atual e o que veio da recursao
         }
-        else if (visitado[i].stack)                                     // se o item ja fizer parte da stack (foi visitado e ainda nao foi removido da pilha)
-            visitado[x].low = (min(visitado[x].low, visitado[i].disc)); // escolhe o menor camiho enntre o atual e o da pilha
+        else if (visitado[prox].stack)                                             // se o item ja fizer parte da stack (foi visitado e ainda nao foi removido da pilha)
+            visitado[atual].low = (min(visitado[atual].low, visitado[prox].disc)); // escolhe o menor camiho enntre o atual e o da pilha
     }
 
-
     // vertice raiz de um componente conexo? tira da pilha os membros,atualiza as flags e aumenta a contagem de componentes connexos
-    int w = 0;
-    if (visitado[x].low == visitado[x].disc)
+    string w;
+    if (visitado[atual].low == visitado[atual].disc)
     {
-        while (pilha.top() != x)
+        while (pilha.top() != atual)
         {
-            w = (int)pilha.top();
+            w = pilha.top();
             visitado[w].stack = false;
             pilha.pop();
         }
-        w = (int)pilha.top();
+        w = pilha.top();
         visitado[w].stack = false;
         pilha.pop();
 
@@ -305,8 +293,10 @@ void Grafo::Profundidade_recursao(const Predador &vertice, const int x, vector<v
 //o algoritmo recebe o vertice inicial e o alvo, o algoritmo guloso
 //funciona da maneira determinada nos slides da AULA17
 
+//usa o conceito de fila de prioridade para realizar a pesquisa e atualizar os caminhos
+
 //caso nao exista um caminho entre o vertice inicial e o alvo o peso
-//no vetor D vale -1
+//no vetor D vale int_max("infinito")
 
 int Grafo::dijkstra(string n_predador, string n_presa)  {
 
@@ -318,7 +308,7 @@ int Grafo::dijkstra(string n_predador, string n_presa)  {
         return __INT_MAX__;
 
     if (n_predador == n_presa)                          //predador e presa iguais
-    {                                                   // caso obvio, tem que estar na lista de presa
+    {                                                   //caso obvio, tem que estar na lista de presa
         auto v = vertices.find(Predador(n_predador));   //acha o vertice
         auto presa = v->presas.find(Presa(0,n_presa));  //procura por um alimento com o nome n_presa==n_predador
 
@@ -329,63 +319,45 @@ int Grafo::dijkstra(string n_predador, string n_presa)  {
     }
 
 
-
-    int i, v, u;
     int peso = 0;
-    vector<dij> D; // vetor D que armazena os pesos para chegar ate cada vertice partindo de um vertice de predador
-    dij temp;      // vetor auxiliar
+    map<string, int> Di;    //map, indexa de acordo com o nome um vetor de inteiros que sera o peso de cada vertice
     priority_queue<string> fila;
 
-    // inicializa o vetor auxiliar D
-    // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como infinito exceto o inicial
-    // e tambem eh destacado o nome da especie
+    // inicializa o vetor auxiliar Di
+    // que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como infinito exceto o inicial
     for (const auto &x : vertices)
     {
-        temp.peso = __INT_MAX__; //infinito
-        temp.nome = x.predador.nome;
-        if (temp.nome == n_predador) // peso do vertice de partida eh zero
-            temp.peso = 0;
-        D.push_back(temp);
+        Di[x.predador.nome]=__INT_MAX__;
+        if (x.predador.nome == n_predador) // peso do vertice de partida eh zero
+            Di[x.predador.nome]=0;
     }
 
     fila.push(n_predador); // insere raiz da pesquisa na fila
 
     while (!fila.empty()) // enquanto a fila n estiver vazia
     {
-        string atual = fila.top(); // pega o vertice, remove ele da fila e salva o indice do vetor auxiliar D no proximo for
+        string atual = fila.top(); // pega o vertice, remove ele da fila e salva o indice do vetor auxiliar Di no proximo for
         fila.pop();
-        v = 0;
-        for (auto &topo : vertices) // acha o vertice atual para passar por todas as presas dele
+
+        auto &topo = *vertices.find(Predador(atual));   //pega o vertice referente ao topo da fila que foi removido
+
+        // passa por todas as presas do vertice atual
+        for (auto &presa : topo.presas)
         {
-            if (topo.predador.nome == atual)
+            string proximo = presa.nome_da_presa; // pega o nome da presa e o peso, e salva o indice no vetor auxiliar
+
+            int peso = presa.populacao_do_predador; //peso de incremento do caminho
+
+            // se o caminho que passa por essa presa eh menor ou se ainda nao passou por la
+            if (Di[proximo] > Di[atual] + peso)
             {
-                
-                // passa por todas as presas do vertice atual
-                for (auto &presa : topo.presas)
-                {   
-                        string proximo = presa.nome_da_presa; // pega o nome da presa e o peso, e salva o indice no vetor auxiliar
-
-                        for (u = 0; u < numero_de_vertices; u++){ // pega o indice do predador/presa na lista auxiliar
-                            if (D[u].nome == proximo)
-                                break;
-                        }
-                        int peso = presa.populacao_do_predador;
-
-                        // se o caminho que passa por essa presa eh menor ou se ainda nao passou por la
-                        if (D[u].peso > D[v].peso + peso)
-                        {
-                            // atualiza a distancia do caminho
-                            D[u].peso = D[v].peso + peso;
-                            fila.push(proximo);
-                        }
-                }
+                // atualiza a distancia do caminho e a fila
+                Di[proximo] = Di[atual] + peso;
+                fila.push(proximo);
             }
-            v++; // atualiza indice do vetor auxiliar
         }
     }
+
     // retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
-    for (i = 0; i < numero_de_vertices; i++)
-        if (D[i].nome == n_presa)
-            break;
-    return D[i].peso;
+    return Di[n_presa];
 }

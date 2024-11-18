@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <set>
+#include <map>
 #include <vector>
 #include <stack>
 #include "Classes_metodos_presa_e_predador.h"
@@ -18,18 +19,12 @@ private:
     set<Predador> vertices;
     
     typedef struct{
-    string nome;
     int low;
     int disc;
     bool stack;
 
     }vis; //variavel auxiliar para fazer a pesquisa por profundidade, armazena o nome da especie e se foi visitada
 
-    typedef struct{
-    int peso;
-    string nome;
-
-    }dij; //variavel auxiliar para fazer a pesquisa com o algoritmo de dijkstra, armazena o nome da especie e o peso do caminho
 
     //METODO DE EXIBICAO DA FUNCIONALIDADE 10
     void exibe_grafo() const;
@@ -43,7 +38,7 @@ private:
 
     //METODOS DA FUNCIONALIDADE 13
     int Profundidade();
-    void Profundidade_recursao(const Predador& vertice, int x,vector<vis> &visitado,stack<int> &pilha,int &comp);
+    void Profundidade_recursao(const Predador &vertice, map<string,vis> &visitado, stack<string> &pilha, int &comp);
 
     //METODO DA FUNCIONALIDADE 14
     int dijkstra(string n_predador, string n_presa);
