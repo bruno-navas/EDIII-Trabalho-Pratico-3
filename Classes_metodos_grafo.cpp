@@ -120,17 +120,21 @@ void Grafo::exibe_grafo() const {
 
 //METODOS USADOS NA FUNCAO 11///////////////////////////////////////////////////////////////////////
 
+//a funcao simplesmente percorre o grafo em busca
+//dos predadores e adiciona eles a saida que sera exibida
+
 void Grafo::busca_predadores(char presa[]) const {
     // Armazena o resultado
     string saida;
 
     // Percorre todos os Predadores e suas Presas
-    for(const auto& x:vertices) {
-        for(const auto& y:x.presas) {
-            // Se encontrar a presa buscada nas Presas do Predador, adiciona o nome do Predador à resposta
-            if (y.nome_da_presa==presa) {
-                saida += x.predador.nome + ", ";
-            }
+    for (const auto &x : vertices)
+    {
+        // Se encontrar a presa buscada nas Presas do Predador, adiciona o nome do Predador à resposta
+        auto y = x.presas.find(Presa(0, presa));
+        if (y != x.presas.end())
+        {
+            saida += x.predador.nome + ", ";
         }
     }
 
@@ -143,7 +147,6 @@ void Grafo::busca_predadores(char presa[]) const {
         cout << ERRO_REGISTRO << endl;
     }
 }
-
 
 //METODOS USADOS NA FUNCIONALIDADE 12/////////////////////////////////////////////////////////////
 
@@ -206,15 +209,14 @@ void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) 
 // funcao principal da pesquisa em profundidade
 //a funcao realiza a pesquisa em profundidade de forma recursiva em todos os vertices do grafo
 
-//para poder realizar a pesquisa um vetor auxiliar eh feito para que indices possam ser utilizados para acesso
-//de outra forma ao nome das especies pesquisadas.
+//para poder realizar a pesquisa um map auxiliar eh feito para que os indices sejam os nomes das especies
 //essa foi uma abordagem que pensamos em usar por conta da forma de armazenar os vertices em formato <set>, que impede
 //o acesso direto dos dados. assim eh possivel indexar de uma forma os nomes das presas na ordem que temos, sendo necessario um pouco de
 //espaco auxiliar a mais
 
 //a pesquisa eh feita com base no algoritmo de tarjan, abordagem que usa apenas uma travessia pelo grafo
 //vale ressaltar que para a funcao funcioar devidamente foi preciso acescentar os vertices
-// de alimentos que aida ao estivessem nos vertices, como "sunlight"
+// de alimentos que ainda ao estivessem nos vertices, como "sunlight"
 
 //pagina encontrada que ajudou a construir o codigo
 //https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/
@@ -294,9 +296,10 @@ void Grafo::Profundidade_recursao(const Predador &vertice, map<string,vis> &visi
 //funciona da maneira determinada nos slides da AULA17
 
 //usa o conceito de fila de prioridade para realizar a pesquisa e atualizar os caminhos
+//map para indexar o vetor Di com os caminhos para cada vertice
 
 //caso nao exista um caminho entre o vertice inicial e o alvo o peso
-//no vetor D vale int_max("infinito")
+//no vetor Di vale int_max("infinito")
 
 int Grafo::dijkstra(string n_predador, string n_presa)  {
 

@@ -37,8 +37,12 @@ void Exibe_predadores() {
     // Chama a função scan_quote_string para cada presa
     for (int i = 0; i < numero_de_buscas; i++) {
         char presa[90];
-        scan_quote_string(presa); // Separa as presas e remove as aspas
-        g.busca_predadores(presa); // Chama o metodo correspondente
+        scan_quote_string(presa); // le a presa sem aspas
+
+        if(g.vertices.find(Predador(presa)) != g.vertices.end())        //se o bicho fizer parte do grafo busca
+            g.busca_predadores(presa); // Chama o metodo correspondente
+        else
+            cout << ERRO_REGISTRO << endl;  //se nao fizer parte printa que nao tem registro
     }
 }
 
