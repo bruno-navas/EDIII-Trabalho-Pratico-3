@@ -28,7 +28,7 @@ void Seletor_de_funcionalidade (int selecao) {
                                             //algoritmo que procura o menor caminho entre duas especies considerando o peso
             break;
         default:
-            cout << ERRO_COMANDO;
+            cout << ERRO_PADRAO;
             break;
     }
 }

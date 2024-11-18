@@ -46,7 +46,7 @@ private:
     void Profundidade_recursao(const Predador& vertice, int x,vector<vis> &visitado,stack<int> &pilha,int &comp);
 
     //METODO DA FUNCIONALIDADE 14
-    int dijkstra(string n_predador, string n_presa) const;
+    int dijkstra(string n_predador, string n_presa);
     
 public:
     explicit Grafo(FILE* arquivo);

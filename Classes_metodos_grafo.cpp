@@ -327,7 +327,29 @@ void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<v
 //caso nao exista um caminho entre o vertice inicial e o alvo o peso
 //no vetor D vale -1
 
-int Grafo::dijkstra(string n_predador, string n_presa) const {
+int Grafo::dijkstra(string n_predador, string n_presa)  {
+
+//INNSERCAO NO GRAFO DOS VERTICES QUE TEM APENAS OME POR SEREM SO ALIMENTO (ex: sunlight)
+//nao eh eficiente, mas fuciona ;)
+    bool achou;
+
+    for (const auto &x : vertices)  //repete para todas as listas de presas
+    {
+        for (const auto &y : x.presas)  //dentro da lista
+        {
+            achou=false;    //reinnicia pra cada presa
+            for (const auto &z : vertices)  //
+            {
+                if(z.predador.nome==y.nome_da_presa){   //ve se a presa tambem eh um vertice da lista
+                    achou=true;
+                    break;
+                }
+            }
+            if(!achou)                                      
+                vertices.insert(Predador(y.nome_da_presa)); //insere o que ainda nao tinha
+        }
+    }
+
     bool vert_1=false,vert_2=false;     //checa se ambos os membros fazem parte da lista de vertices
     for(const auto &x : vertices)
     {
@@ -337,10 +359,10 @@ int Grafo::dijkstra(string n_predador, string n_presa) const {
             vert_2=true;
     }    
 
-    if(!vert_1)  //se o inicio nao estiver na lista de vertices n tem caminho
+    if(!vert_1 || !vert_2)  //se o inicio ou o fim n estiver na lista de vertices n tem caminho
         return __INT_MAX__;
 
-    if (n_predador == n_presa)
+    if (n_predador == n_presa)              //predador e presa iguais
     { // caso obvio, ou ele se come ou nao
         for (const auto &x : vertices)
         {
@@ -349,7 +371,7 @@ int Grafo::dijkstra(string n_predador, string n_presa) const {
                 for (const auto &y : x.presas)
                 {
                     if (y.nome_da_presa == n_presa) // se o bixo se comer, tem caminho
-                        return 0;
+                        return y.populacao_do_predador;
                 }
                 return __INT_MAX__; // se o bixo nao se comer, retorna que nao tem caminho
             }
@@ -361,8 +383,8 @@ int Grafo::dijkstra(string n_predador, string n_presa) const {
     vector<dij> D; // vetor D que armazena os pesos para chegar ate cada vertice partindo de um vertice de predador
     dij temp;      // vetor auxiliar
     priority_queue<string> fila;
-    // inicializa o vetor auxiliar D
 
+    // inicializa o vetor auxiliar D
     // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os pesos para chegar ao vertice iniciam como infinito exceto o inicial
     // e tambem eh destacado o nome da especie
     for (const auto &x : vertices)
@@ -409,31 +431,9 @@ int Grafo::dijkstra(string n_predador, string n_presa) const {
             v++; // atualiza indice do vetor auxiliar
         }
     }
-    int resultado=__INT_MAX__;
-
     // retorna o peso do caminho para chegar na presa/alimento a partir do predador dado
-    if (vert_2) // se a presa for um vertice
-    {
-        for (i = 0; i < numero_de_vertices; i++)
-            if (D[i].nome == n_presa)
-                return D[i].peso;
-    }
-    else // se a presa nao tiver vertice
-    {
-        for (auto &topo : vertices)
-        {
-            for (auto &y : topo.presas) 
-            {
-                if (y.nome_da_presa == n_presa)//acha o alvo na lista de adjacencia, se houver caminho pro vertice dessa lista faz a operacao de antes
-                {
-                    for (i = 0; i < numero_de_vertices; i++)
-                        if (topo.predador.nome == D[i].nome && (D[i].peso+y.populacao_do_predador) < resultado && D[i].peso!=__INT_MAX__){
-                            resultado = D[i].peso+y.populacao_do_predador;
-                        }
-                }
-            }
-        }
-        
-    }
-    return resultado;
+    for (i = 0; i < numero_de_vertices; i++)
+        if (D[i].nome == n_presa)
+            break;
+    return D[i].peso;
 }
