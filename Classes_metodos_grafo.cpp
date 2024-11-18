@@ -254,35 +254,33 @@ int Grafo::Profundidade()
 //parte recursiva do processo
 static int tempo = 0;   //variavel global para abstacao do codigo
 
-void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<vis> &visitado,stack<int> &pilha,int &comp)
+void Grafo::Profundidade_recursao(const Predador &vertice, const int x, vector<vis> &visitado, stack<int> &pilha, int &comp)
 {
 
-    visitado[x].low = visitado[x].disc = ++tempo;   //a variavel global tempo ajuda na abstracao do codigo e significa quantos passos
-    visitado[x].stack=true;                         //foram precisos para chegar no vertice "x" dentro do algoritmo
-    pilha.push(x);                                  //coloca o vertice na pilha
+    visitado[x].low = visitado[x].disc = ++tempo; // a variavel global tempo ajuda na abstracao do codigo e significa quantos passos
+    visitado[x].stack = true;                     // foram precisos para chegar no vertice "x" dentro do algoritmo
+    pilha.push(x);                                // coloca o vertice na pilha
 
     int i;
     for (const auto &presas_vertice : vertice.presas) // passa pela lista de presas do predador atual
     {
-        for (const auto &lista_predador : vertices) // pasa pelos predadores de novo de acordo com os nomes na lista de presas do que veio antes
-                                                    // eh nesse for que estao os predadores (com nome na lista de presas) que serao enviados para recursao novamente
-        {
-            if (presas_vertice.nome_da_presa == lista_predador.predador.nome) // se o nome fizer, tanto parte da lista de presas quanto a de vertices(predadores) faz as checagens
-            { 
-                for (i = 0; i < numero_de_vertices; i++)                  // pega o indice do predador/presa na lista auxiliar
-                    if (visitado[i].nome == lista_predador.predador.nome) // nao eh tao eficiente mas foi a forma pensada para indexar o <set>
-                        break;
+        auto &lista_predador = *vertices.find(Predador(presas_vertice.nome_da_presa));
+        // eh nesse find q estao os predadores (com nome na lista de presas) que serao enviados para recursao novamente (ou nao)
 
-                if (visitado[i].disc == -1){                          // se esse vertice ainda nao foi visitado, chamada recursiva
-                    Profundidade_recursao(lista_predador, i, visitado,pilha,comp); // funcao recebe o vertice que ainda nao foi visitado, a lista auxiliar e o indice referente
-                    visitado[x].low = min(visitado[x].low,visitado[i].low);        //escolhe o menor camiho enntre o atual e o que veio da recursao
+        for (i = 0; i < numero_de_vertices; i++)                  // pega o indice do predador/presa na lista auxiliar
+            if (visitado[i].nome == lista_predador.predador.nome) // nao eh tao eficiente mas foi a forma pensada para indexar o <set>
+                break;
 
-                }else if(visitado[i].stack) //se o item ja fizer parte da stack (foi visitado e ainda nao foi removido da pilha)
-                    visitado[x].low=(min(visitado[x].low,visitado[i].disc));       //escolhe o menor camiho enntre o atual e o da pilha
-            }   
+        if (visitado[i].disc == -1)
+        {                                                                    // se esse vertice ainda nao foi visitado, chamada recursiva
+            Profundidade_recursao(lista_predador, i, visitado, pilha, comp); // funcao recebe o vertice que ainda nao foi visitado, a lista auxiliar e o indice referente
+            visitado[x].low = min(visitado[x].low, visitado[i].low);         // escolhe o menor camiho enntre o atual e o que veio da recursao
         }
-
+        else if (visitado[i].stack)                                     // se o item ja fizer parte da stack (foi visitado e ainda nao foi removido da pilha)
+            visitado[x].low = (min(visitado[x].low, visitado[i].disc)); // escolhe o menor camiho enntre o atual e o da pilha
     }
+
+
     // vertice raiz de um componente conexo? tira da pilha os membros,atualiza as flags e aumenta a contagem de componentes connexos
     int w = 0;
     if (visitado[x].low == visitado[x].disc)
