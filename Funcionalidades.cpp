@@ -9,6 +9,13 @@ using namespace std;
 // Essa função cria um grafo a partir de um arquivo binário e exibe todas as suas presas e predadores
 void Cria_grafo_e_exibe() {
     Grafo g = Cria_grafo(); // Cria grafo
+
+    if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo
+    {
+        cout << ERRO_PADRAO;
+        return;
+    }
+
     g.exibe_grafo(); // Exibe
 }
 
@@ -59,9 +66,7 @@ void Identifica_ciclos() {
 //as duas principais funcoes utilizadas aqui são Profundidade e Profundidade_recursao, explicadas a seguir
 
 void Analisa_conexoes() {
-    Grafo g = Cria_grafo();      //cria o grafo
-
-    
+    Grafo g = Cria_grafo();      //cria o grafo   
 
     if(g.numero_de_vertices==-1) //se houver problema na criacao do grafo, da erro e nao executa a funcao
     {

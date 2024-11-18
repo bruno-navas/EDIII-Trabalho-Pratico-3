@@ -65,25 +65,31 @@ Grafo::Grafo(FILE* arquivo) {
         }
     }
 
-    //Loops para a definição do grau de entrada dos vértices
-     for (const auto& x : vertices) {
-         for (const auto& y : x.presas) {
-              Predador busca_presa = x; // Predador auxiliar recebe os dados do Predador atual
-              //cout << busca_presa << endl;
-              // Como a busca em vertices se dá pelo nome do Predador, precisamos trocá-lo
-              busca_presa.predador.nome = y.nome_da_presa; // Auxiliar recebe o nome da presa atual
+    // Loops para a definição do grau de entrada dos vértices
+    for (const auto &x : vertices)
+    {
+        for (const auto &y : x.presas)
+        {
+            Predador busca_presa = x; // Predador auxiliar recebe os dados do Predador atual
+            // cout << busca_presa << endl;
+            //  Como a busca em vertices se dá pelo nome do Predador, precisamos trocá-lo
+            busca_presa.predador.nome = y.nome_da_presa; // Auxiliar recebe o nome da presa atual
 
-              // Procura a presa em vértices (a presa também é predadora)
-              auto it_presa = vertices.find(busca_presa);
+            // Procura a presa em vértices (a presa também é predadora)
+            auto it_presa = vertices.find(busca_presa);
 
-              // Se a presa estiver em vertices, it_presa recebe sua posição
-              if(it_presa!=vertices.end()) {
-                  auto& aux_presa = const_cast<Predador&>(*it_presa); // Copiamos seus dados para um auxiliar
-                  aux_presa.predador.grau_entrada++; // Aumentamos seu grau de entrada
-                  aux_presa.predador.grau++; // Aumentamos seu grau
-             }
-         }
-     }
+            // Se a presa estiver em vertices, it_presa recebe sua posição
+            if (it_presa != vertices.end())
+            {
+                auto &aux_presa = const_cast<Predador &>(*it_presa); // Copiamos seus dados para um auxiliar
+                aux_presa.predador.grau_entrada++;                   // Aumentamos seu grau de entrada
+                aux_presa.predador.grau++;                           // Aumentamos seu grau
+            }
+
+            if (it_presa == vertices.end()) // se a comida nn fizer parte dos vertices, insere: funcoes 13 e 14 eh necessario
+                vertices.insert(Predador(y.nome_da_presa));
+        }
+    }
 }
 
 //METODOS USADOS NA FUNCAO 10///////////////////////////////////////////////////////////////////////
@@ -100,16 +106,12 @@ Grafo Cria_grafo() {
 
 void Grafo::exibe_grafo() const {
 
-    if(numero_de_vertices==0)
-    {
-        cout << ERRO_PADRAO;
-        return;
-    } // Grafo vazio
-
     // Loops que percorem todos os Predadores e todas as suas Presas, exibindo seus dados
     for (const auto& x: vertices) {
-        for (const auto& y: x.presas) {
-            cout << x << y;
+        if(x.predador.grau_saida!=-1){          //so exibe se o vertice nao for tipo "sunlight"
+            for (const auto& y: x.presas) {
+                cout << x << y;
+            }
         }
     }
 }
@@ -216,8 +218,7 @@ void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) 
 //https://www.geeksforgeeks.org/tarjan-algorithm-find-strongly-connected-components/
 
 int Grafo::Profundidade()
-{
-    
+{  
     int componentes = 0; // nro de componentes conexos
     int aux;             // auxiliar para checar se um componente eh conexo
     int k;               // indice do vertice que entrara na recursao
@@ -225,25 +226,6 @@ int Grafo::Profundidade()
     vector<vis> visitado; // vetor auxiliar
     vis temp;             // vetor auxiliar
     stack<int> pilha;     //pilha que sera usada no processo de recursao
-
-    //INNSERCAO NO GRAFO DOS VERTICES QUE TEM APENAS OME POR SEREM SO ALIMENTO (ex: sunlight)
-    bool achou;
-    for (const auto &x : vertices)  //repete para todas as listas de presas
-    {
-        for (const auto &y : x.presas)  //dentro da lista
-        {
-            achou=false;    //reinnicia pra cada presa
-            for (const auto &z : vertices)  //
-            {
-                if(z.predador.nome==y.nome_da_presa){   //ve se a presa tambem eh um vertice da lista
-                    achou=true;
-                    break;
-                }
-            }
-            if(!achou)                                      
-                vertices.insert(Predador(y.nome_da_presa)); //insere o que ainda nao tinha
-        }
-    }
 
     // inicializa o vetor auxiliar que sera utilizado na pesquisa, basicamente os vertices sao considerados nao visitados incialmente
     // e tambem eh destacado o nome da especie
@@ -329,54 +311,25 @@ void Grafo::Profundidade_recursao(const Predador& vertice, const int x, vector<v
 
 int Grafo::dijkstra(string n_predador, string n_presa)  {
 
-//INNSERCAO NO GRAFO DOS VERTICES QUE TEM APENAS OME POR SEREM SO ALIMENTO (ex: sunlight)
-//nao eh eficiente, mas fuciona ;)
-    bool achou;
+    //checa se ambos os membros fazem parte da lista de vertices
+    auto pred = vertices.find(Predador(n_predador));
+    auto alim = vertices.find(Predador(n_presa));
 
-    for (const auto &x : vertices)  //repete para todas as listas de presas
-    {
-        for (const auto &y : x.presas)  //dentro da lista
-        {
-            achou=false;    //reinnicia pra cada presa
-            for (const auto &z : vertices)  //
-            {
-                if(z.predador.nome==y.nome_da_presa){   //ve se a presa tambem eh um vertice da lista
-                    achou=true;
-                    break;
-                }
-            }
-            if(!achou)                                      
-                vertices.insert(Predador(y.nome_da_presa)); //insere o que ainda nao tinha
-        }
-    }
-
-    bool vert_1=false,vert_2=false;     //checa se ambos os membros fazem parte da lista de vertices
-    for(const auto &x : vertices)
-    {
-        if(x.predador.nome==n_predador)
-            vert_1=true;
-        if(x.predador.nome==n_presa)
-            vert_2=true;
-    }    
-
-    if(!vert_1 || !vert_2)  //se o inicio ou o fim n estiver na lista de vertices n tem caminho
+    if(pred==vertices.end() || alim==vertices.end())  //se o inicio ou o fim n estiver na lista de vertices n tem caminho
         return __INT_MAX__;
 
-    if (n_predador == n_presa)              //predador e presa iguais
-    { // caso obvio, ou ele se come ou nao
-        for (const auto &x : vertices)
-        {
-            if (x.predador.nome == n_predador)
-            {
-                for (const auto &y : x.presas)
-                {
-                    if (y.nome_da_presa == n_presa) // se o bixo se comer, tem caminho
-                        return y.populacao_do_predador;
-                }
-                return __INT_MAX__; // se o bixo nao se comer, retorna que nao tem caminho
-            }
-        }
+    if (n_predador == n_presa)                          //predador e presa iguais
+    {                                                   // caso obvio, tem que estar na lista de presa
+        auto v = vertices.find(Predador(n_predador));   //acha o vertice
+        auto presa = v->presas.find(Presa(0,n_presa));  //procura por um alimento com o nome n_presa==n_predador
+
+        if (presa!=v->presas.end()) // se o bixo se comer, tem caminho
+            return presa->populacao_do_predador;
+                
+        return __INT_MAX__; // se o bixo nao se comer, retorna que nao tem caminho
     }
+
+
 
     int i, v, u;
     int peso = 0;

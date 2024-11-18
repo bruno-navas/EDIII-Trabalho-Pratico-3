@@ -55,6 +55,6 @@ Especie::Especie(string NOME) {
     tipo = "NA";
     presa = "NA";
     grau_entrada = 0;
-    grau_saida = 0;
+    grau_saida = -1;
     grau = 0;
 }

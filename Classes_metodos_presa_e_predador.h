@@ -12,10 +12,21 @@ public:
     int populacao_do_predador;
 
     explicit Presa(int populacao, string nome);
-    bool operator<(const Presa& e) const {
+    bool operator<(const Presa &e) const
+    {
         return this->nome_da_presa < e.nome_da_presa;
     } // Operador de comparação para ordenação no set
+
+    bool operator==(const Presa &e) const
+    {
+        if (this->nome_da_presa == e.nome_da_presa)
+        {
+            return true;
+        }
+        return false;
+    } // Operador de comparação para busca no set
     friend ostream& operator<<(ostream& os, const Presa& e); // Operador para exibição dos dados da presa
+
 };
 
 class Predador {
