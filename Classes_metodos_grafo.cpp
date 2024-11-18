@@ -86,6 +86,7 @@ Grafo::Grafo(FILE* arquivo) {
                 aux_presa.predador.grau++;                           // Aumentamos seu grau
             }
 
+
             if (it_presa == vertices.end()) // se a comida nn fizer parte dos vertices, insere: funcoes 13 e 14 eh necessario
                 vertices.insert(Predador(y.nome_da_presa));
         }

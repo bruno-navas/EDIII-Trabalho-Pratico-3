@@ -60,6 +60,7 @@ public:
 };
 
 //funcao que le o nome do arquivo, cria o ponteiro pra arquivo e chama o construtor
+//o bool determina se a correcao dos alimentos ocorrera ou nao
 Grafo Cria_grafo();
 
 #endif //CLASSES_METODOS_GRAFO_H
