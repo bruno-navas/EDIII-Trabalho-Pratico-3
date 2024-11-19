@@ -182,7 +182,8 @@ void Grafo::auxiliar_ciclos(const Predador& p, int pos, vector<int>& visitados) 
         novo_p.predador.nome = x.nome_da_presa; // Trocamos seu nome pelo nome da Presa atual para a busca em vertices
 
         // Se a Presa atual estiver em vertices (também é predadora), chamamos o metodo auxiliar para ela
-        if (auto it_presa = vertices.find(novo_p); it_presa!=vertices.end()) {
+        auto it_presa = vertices.find(novo_p);
+        if (it_presa!=vertices.end()) {
             novo_p = *it_presa; // Atualizamos o auxiliar com os dados da posição em que encontramos a Presa em vertices
             const int nova_pos = static_cast<int>(distance(vertices.begin(), it_presa)); // Calculamos a nova_pos pela distância de it_presa e o inicio de vertices
             auxiliar_ciclos(novo_p, nova_pos, visitados);
